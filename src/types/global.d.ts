@@ -17,7 +17,7 @@ declare namespace MACRO {
 }
 
 // ============================================================================
-// Internal Anthropic-only identifiers (dead-code eliminated in open-source)
+// Internal FlawRA-only identifiers (dead-code eliminated in open-source)
 // These are referenced inside `MACRO(() => ...)` or `false && ...` blocks.
 
 // Model resolution (internal)

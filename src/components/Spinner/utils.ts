@@ -2,7 +2,7 @@ import type { RGBColor as RGBColorString } from '../../ink/styles.js'
 import type { RGBColor as RGBColorType } from './types.js'
 
 export function getDefaultCharacters(): string[] {
-  // FLAWRA-CODE: diamond pulse — distinct from the Claude asterisk spinner
+  // FLAWRA-CODE: diamond pulse — distinct from the Flawra asterisk spinner
   if (process.env.TERM === 'xterm-ghostty') {
     return ['◇', '◈', '◆', '◈', '◇', '⟐']
   }

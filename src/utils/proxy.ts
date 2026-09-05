@@ -148,7 +148,7 @@ function createHttpsProxyAgent(
     ...(caCerts && { ca: caCerts }),
   }
 
-  if (isEnvTruthy(process.env.CLAUDE_CODE_PROXY_RESOLVES_HOSTS)) {
+  if (isEnvTruthy(process.env.FLAWRA_CODE_PROXY_RESOLVES_HOSTS)) {
     // Skip local DNS resolution - let the proxy resolve hostnames
     // This is needed for environments where DNS is not configured locally
     // and instead handled by the proxy (as in sandboxes)
@@ -275,17 +275,17 @@ export function getWebSocketProxyUrl(url: string): string | undefined {
 }
 
 /**
- * Get fetch options for the Anthropic SDK with proxy and mTLS configuration
+ * Get fetch options for the FlawRA SDK with proxy and mTLS configuration
  * Returns fetch options with appropriate dispatcher for proxy and/or mTLS
  *
- * @param opts.forAnthropicAPI - Enables ANTHROPIC_UNIX_SOCKET tunneling. This
- *   env var is set by `claude ssh` on the remote CLI to route API calls through
+ * @param opts.forFlawRAAPI - Enables ANTHROPIC_UNIX_SOCKET tunneling. This
+ *   env var is set by `flawra ssh` on the remote CLI to route API calls through
  *   an ssh -R forwarded unix socket to a local auth proxy. It MUST NOT leak
- *   into non-Anthropic-API fetch paths (MCP HTTP/SSE transports, etc.) or those
- *   requests get misrouted to api.anthropic.com. Only the Anthropic SDK client
+ *   into non-FlawRA-API fetch paths (MCP HTTP/SSE transports, etc.) or those
+ *   requests get misrouted to api.anthropic.com. Only the FlawRA SDK client
  *   should pass `true` here.
  */
-export function getProxyFetchOptions(opts?: { forAnthropicAPI?: boolean }): {
+export function getProxyFetchOptions(opts?: { forFlawRAAPI?: boolean }): {
   tls?: TLSConfig
   dispatcher?: undici.Dispatcher
   proxy?: string
@@ -294,10 +294,10 @@ export function getProxyFetchOptions(opts?: { forAnthropicAPI?: boolean }): {
 } {
   const base = keepAliveDisabled ? ({ keepalive: false } as const) : {}
 
-  // ANTHROPIC_UNIX_SOCKET tunnels through the `claude ssh` auth proxy, which
-  // hardcodes the upstream to the Anthropic API. Scope to the Anthropic API
+  // ANTHROPIC_UNIX_SOCKET tunnels through the `flawra ssh` auth proxy, which
+  // hardcodes the upstream to the FlawRA API. Scope to the FlawRA API
   // client so MCP/SSE/other callers don't get their requests misrouted.
-  if (opts?.forAnthropicAPI) {
+  if (opts?.forFlawRAAPI) {
     const unixSocket = process.env.ANTHROPIC_UNIX_SOCKET
     if (unixSocket && typeof Bun !== 'undefined') {
       return { ...base, unix: unixSocket }

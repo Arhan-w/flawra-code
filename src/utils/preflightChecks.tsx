@@ -106,12 +106,12 @@ export function PreflightStep({ onSuccess }: PreflightStepProps) {
   } else if (!result?.success && !isChecking) {
     content = (
       <Box flexDirection="column" gap={1}>
-        <Text color="error">Unable to connect to Anthropic services</Text>
+        <Text color="error">Unable to connect to FlawRA services</Text>
         <Text color="error">{result?.error}</Text>
         {result?.sslHint ? (
           <Box flexDirection="column" gap={1}>
             <Text>{result.sslHint}</Text>
-            <Text color="suggestion">See https://code.claude.com/docs/en/network-config</Text>
+            <Text color="suggestion">See https://code.flawra.com/docs/en/network-config</Text>
           </Box>
         ) : (
           <Box flexDirection="column" gap={1}>

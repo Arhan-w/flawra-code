@@ -4,10 +4,10 @@ import { env } from './env.js'
 export type Theme = {
   autoAccept: string
   bashBorder: string
-  claude: string
-  claudeShimmer: string // Lighter version of claude color for shimmer effect
-  claudeBlue_FOR_SYSTEM_SPINNER: string
-  claudeBlueShimmer_FOR_SYSTEM_SPINNER: string
+  flawra: string
+  flawraShimmer: string // Lighter version of flawra color for shimmer effect
+  flawraBlue_FOR_SYSTEM_SPINNER: string
+  flawraBlueShimmer_FOR_SYSTEM_SPINNER: string
   permission: string
   permissionShimmer: string // Lighter version of permission color for shimmer effect
   planMode: string
@@ -57,9 +57,9 @@ export type Theme = {
   /** Message-actions selection. Cool shift toward `suggestion` blue; distinct from default AND userMessageBackground. */
   messageActionsBackground: string
   /** Text-selection highlight background (alt-screen mouse selection). Solid
-   *  bg that REPLACES the cell's bg while preserving its fg — matches native
-   *  terminal selection. Previously SGR-7 inverse (swapped fg/bg per cell),
-   *  which fragmented badly over syntax highlighting. */
+   * bg that REPLACES the cell's bg while preserving its fg — matches native
+   * terminal selection. Previously SGR-7 inverse (swapped fg/bg per cell),
+   * which fragmented badly over syntax highlighting. */
   selectionBg: string
   bashMessageBackgroundColor: string
 
@@ -70,7 +70,7 @@ export type Theme = {
   fastModeShimmer: string
   // Brief/assistant mode label colors
   briefLabelYou: string
-  briefLabelClaude: string
+  briefLabelFlawra: string
   // Rainbow colors for ultrathink keyword highlighting
   rainbow_red: string
   rainbow_orange: string
@@ -115,10 +115,10 @@ export type ThemeSetting = (typeof THEME_SETTINGS)[number]
 const lightTheme: Theme = {
   autoAccept: 'rgb(135,0,255)', // Electric violet
   bashBorder: 'rgb(255,0,135)', // Vibrant pink
-  claude: 'rgb(34,211,238)', // FLAWRA cyan
-  claudeShimmer: 'rgb(140,240,255)', // Lighter FLAWRA cyan shimmer
-  claudeBlue_FOR_SYSTEM_SPINNER: 'rgb(87,105,247)', // Medium blue for system spinner
-  claudeBlueShimmer_FOR_SYSTEM_SPINNER: 'rgb(117,135,255)', // Lighter blue for system spinner shimmer
+  flawra: 'rgb(34,211,238)', // FLAWRA cyan
+  flawraShimmer: 'rgb(140,240,255)', // Lighter FLAWRA cyan shimmer
+  flawraBlue_FOR_SYSTEM_SPINNER: 'rgb(87,105,247)', // Medium blue for system spinner
+  flawraBlueShimmer_FOR_SYSTEM_SPINNER: 'rgb(117,135,255)', // Lighter blue for system spinner shimmer
   permission: 'rgb(87,105,247)', // Medium blue
   permissionShimmer: 'rgb(137,155,255)', // Lighter blue for shimmer effect
   planMode: 'rgb(0,102,102)', // Muted teal
@@ -173,7 +173,7 @@ const lightTheme: Theme = {
   fastModeShimmer: 'rgb(255,150,50)', // Lighter orange for shimmer
   // Brief/assistant mode
   briefLabelYou: 'rgb(37,99,235)', // Blue
-  briefLabelClaude: 'rgb(34,211,238)', // Brand orange
+  briefLabelFlawra: 'rgb(34,211,238)', // Brand orange
   rainbow_red: 'rgb(235,95,87)',
   rainbow_orange: 'rgb(245,139,87)',
   rainbow_yellow: 'rgb(250,195,95)',
@@ -197,10 +197,10 @@ const lightTheme: Theme = {
 const lightAnsiTheme: Theme = {
   autoAccept: 'ansi:magenta',
   bashBorder: 'ansi:magenta',
-  claude: 'ansi:cyanBright',
-  claude: 'ansi:cyanBright',
-  claudeBlue_FOR_SYSTEM_SPINNER: 'ansi:blue',
-  claudeBlueShimmer_FOR_SYSTEM_SPINNER: 'ansi:blueBright',
+  flawra: 'ansi:cyanBright',
+  flawra: 'ansi:cyanBright',
+  flawraBlue_FOR_SYSTEM_SPINNER: 'ansi:blue',
+  flawraBlueShimmer_FOR_SYSTEM_SPINNER: 'ansi:blueBright',
   permission: 'ansi:blue',
   permissionShimmer: 'ansi:blueBright',
   planMode: 'ansi:cyan',
@@ -254,7 +254,7 @@ const lightAnsiTheme: Theme = {
   fastMode: 'ansi:red',
   fastModeShimmer: 'ansi:redBright',
   briefLabelYou: 'ansi:blue',
-  briefLabelClaude: 'ansi:redBright',
+  briefLabelFlawra: 'ansi:redBright',
   rainbow_red: 'ansi:red',
   rainbow_orange: 'ansi:redBright',
   rainbow_yellow: 'ansi:yellow',
@@ -278,10 +278,10 @@ const lightAnsiTheme: Theme = {
 const darkAnsiTheme: Theme = {
   autoAccept: 'ansi:magentaBright',
   bashBorder: 'ansi:magentaBright',
-  claude: 'ansi:cyanBright',
-  claude: 'ansi:cyanBright',
-  claudeBlue_FOR_SYSTEM_SPINNER: 'ansi:blueBright',
-  claudeBlueShimmer_FOR_SYSTEM_SPINNER: 'ansi:blueBright',
+  flawra: 'ansi:cyanBright',
+  flawra: 'ansi:cyanBright',
+  flawraBlue_FOR_SYSTEM_SPINNER: 'ansi:blueBright',
+  flawraBlueShimmer_FOR_SYSTEM_SPINNER: 'ansi:blueBright',
   permission: 'ansi:blueBright',
   permissionShimmer: 'ansi:blueBright',
   planMode: 'ansi:cyanBright',
@@ -335,7 +335,7 @@ const darkAnsiTheme: Theme = {
   fastMode: 'ansi:redBright',
   fastModeShimmer: 'ansi:redBright',
   briefLabelYou: 'ansi:blueBright',
-  briefLabelClaude: 'ansi:redBright',
+  briefLabelFlawra: 'ansi:redBright',
   rainbow_red: 'ansi:red',
   rainbow_orange: 'ansi:redBright',
   rainbow_yellow: 'ansi:yellow',
@@ -359,10 +359,10 @@ const darkAnsiTheme: Theme = {
 const lightDaltonizedTheme: Theme = {
   autoAccept: 'rgb(135,0,255)', // Electric violet
   bashBorder: 'rgb(0,102,204)', // Blue instead of pink
-  claude: 'rgb(0,190,220)', // Cyan adjusted for deuteranopia
-  claudeShimmer: 'rgb(120,225,255)', // Lighter cyan shimmer
-  claudeBlue_FOR_SYSTEM_SPINNER: 'rgb(51,102,255)', // Bright blue for system spinner
-  claudeBlueShimmer_FOR_SYSTEM_SPINNER: 'rgb(101,152,255)', // Lighter bright blue for system spinner shimmer
+  flawra: 'rgb(0,190,220)', // Cyan adjusted for deuteranopia
+  flawraShimmer: 'rgb(120,225,255)', // Lighter cyan shimmer
+  flawraBlue_FOR_SYSTEM_SPINNER: 'rgb(51,102,255)', // Bright blue for system spinner
+  flawraBlueShimmer_FOR_SYSTEM_SPINNER: 'rgb(101,152,255)', // Lighter bright blue for system spinner shimmer
   permission: 'rgb(51,102,255)', // Bright blue
   permissionShimmer: 'rgb(101,152,255)', // Lighter bright blue for shimmer
   planMode: 'rgb(51,102,102)', // Muted blue-gray (works for color-blind)
@@ -416,7 +416,7 @@ const lightDaltonizedTheme: Theme = {
   fastMode: 'rgb(255,106,0)', // Electric orange (color-blind safe)
   fastModeShimmer: 'rgb(255,150,50)', // Lighter orange for shimmer
   briefLabelYou: 'rgb(37,99,235)', // Blue
-  briefLabelClaude: 'rgb(255,153,51)', // Orange adjusted for deuteranopia (matches claude)
+  briefLabelFlawra: 'rgb(255,153,51)', // Orange adjusted for deuteranopia (matches flawra)
   rainbow_red: 'rgb(235,95,87)',
   rainbow_orange: 'rgb(245,139,87)',
   rainbow_yellow: 'rgb(250,195,95)',
@@ -440,10 +440,10 @@ const lightDaltonizedTheme: Theme = {
 const darkTheme: Theme = {
   autoAccept: 'rgb(175,135,255)', // Electric violet
   bashBorder: 'rgb(253,93,177)', // Bright pink
-  claude: 'rgb(34,211,238)', // FLAWRA cyan
-  claudeShimmer: 'rgb(235,159,127)', // Lighter claude orange for shimmer effect
-  claudeBlue_FOR_SYSTEM_SPINNER: 'rgb(147,165,255)', // Blue for system spinner
-  claudeBlueShimmer_FOR_SYSTEM_SPINNER: 'rgb(177,195,255)', // Lighter blue for system spinner shimmer
+  flawra: 'rgb(34,211,238)', // FLAWRA cyan
+  flawraShimmer: 'rgb(235,159,127)', // Lighter flawra orange for shimmer effect
+  flawraBlue_FOR_SYSTEM_SPINNER: 'rgb(147,165,255)', // Blue for system spinner
+  flawraBlueShimmer_FOR_SYSTEM_SPINNER: 'rgb(177,195,255)', // Lighter blue for system spinner shimmer
   permission: 'rgb(177,185,249)', // Light blue-purple
   permissionShimmer: 'rgb(207,215,255)', // Lighter blue-purple for shimmer
   planMode: 'rgb(72,150,140)', // Muted sage green
@@ -497,7 +497,7 @@ const darkTheme: Theme = {
   fastMode: 'rgb(255,120,20)', // Electric orange for dark bg
   fastModeShimmer: 'rgb(255,165,70)', // Lighter orange for shimmer
   briefLabelYou: 'rgb(122,180,232)', // Light blue
-  briefLabelClaude: 'rgb(34,211,238)', // Brand orange
+  briefLabelFlawra: 'rgb(34,211,238)', // Brand orange
   rainbow_red: 'rgb(235,95,87)',
   rainbow_orange: 'rgb(245,139,87)',
   rainbow_yellow: 'rgb(250,195,95)',
@@ -521,10 +521,10 @@ const darkTheme: Theme = {
 const darkDaltonizedTheme: Theme = {
   autoAccept: 'rgb(175,135,255)', // Electric violet
   bashBorder: 'rgb(51,153,255)', // Bright blue
-  claude: 'rgb(0,190,220)', // Cyan adjusted for deuteranopia
-  claudeShimmer: 'rgb(120,225,255)', // Lighter cyan shimmer
-  claudeBlue_FOR_SYSTEM_SPINNER: 'rgb(153,204,255)', // Light blue for system spinner
-  claudeBlueShimmer_FOR_SYSTEM_SPINNER: 'rgb(183,224,255)', // Lighter blue for system spinner shimmer
+  flawra: 'rgb(0,190,220)', // Cyan adjusted for deuteranopia
+  flawraShimmer: 'rgb(120,225,255)', // Lighter cyan shimmer
+  flawraBlue_FOR_SYSTEM_SPINNER: 'rgb(153,204,255)', // Light blue for system spinner
+  flawraBlueShimmer_FOR_SYSTEM_SPINNER: 'rgb(183,224,255)', // Lighter blue for system spinner shimmer
   permission: 'rgb(153,204,255)', // Light blue
   permissionShimmer: 'rgb(183,224,255)', // Lighter blue for shimmer
   planMode: 'rgb(102,153,153)', // Muted gray-teal (works for color-blind)
@@ -578,7 +578,7 @@ const darkDaltonizedTheme: Theme = {
   fastMode: 'rgb(255,120,20)', // Electric orange for dark bg (color-blind safe)
   fastModeShimmer: 'rgb(255,165,70)', // Lighter orange for shimmer
   briefLabelYou: 'rgb(122,180,232)', // Light blue
-  briefLabelClaude: 'rgb(255,153,51)', // Orange adjusted for deuteranopia (matches claude)
+  briefLabelFlawra: 'rgb(255,153,51)', // Orange adjusted for deuteranopia (matches flawra)
   rainbow_red: 'rgb(235,95,87)',
   rainbow_orange: 'rgb(245,139,87)',
   rainbow_yellow: 'rgb(250,195,95)',

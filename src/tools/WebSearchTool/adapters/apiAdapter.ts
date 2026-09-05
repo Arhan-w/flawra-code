@@ -1,5 +1,5 @@
 /**
- * API-based search adapter — delegates to Anthropic's server-side
+ * API-based search adapter — delegates to FlawRA's server-side
  * web_search_20250305 tool via a secondary API call.
  */
 
@@ -8,7 +8,7 @@ import type {
   BetaWebSearchTool20250305,
 } from '@anthropic-ai/sdk/resources/beta/messages/messages.mjs'
 import { getFeatureValue_CACHED_MAY_BE_STALE } from '../../../services/analytics/growthbook.js'
-import { queryModelWithStreaming } from '../../../services/api/claude.js'
+import { queryModelWithStreaming } from '../../../services/api/flawra.js'
 import { createUserMessage } from '../../../utils/messages.js'
 import { getMainLoopModel, getSmallFastModel } from '../../../utils/model/model.js'
 import { jsonParse } from '../../../utils/slowOperations.js'

@@ -1,8 +1,8 @@
 /**
  * FLAWRA-CODE — custom providers.
  *
- * Lets users point the CLI at ANY Anthropic-Messages-compatible endpoint:
- * local (Ollama, LM Studio, llama.cpp server, claude-code-router), proxies
+ * Lets users point the CLI at ANY FlawRA-Messages-compatible endpoint:
+ * local (Ollama, LM Studio, llama.cpp server, flawra-code-router), proxies
  * (LiteLLM, one-api, new-api), or hosted gateways (OpenRouter via a
  * translating proxy, github-models, etc.) — and map the built-in model
  * aliases (sonnet / opus / haiku / best) onto that provider's model IDs.
@@ -22,7 +22,7 @@
  *       "label": "LiteLLM proxy",
  *       "baseUrl": "http://localhost:4000",
  *       "apiKeyEnv": "LITELLM_MASTER_KEY",
- *       "models": { "opus": "claude-opus-4-6", "sonnet": "claude-sonnet-4-5" }
+ *       "models": { "opus": "flawra-opus-4-6", "sonnet": "flawra-sonnet-4-5" }
  *     }
  *   }
  * }
@@ -180,7 +180,7 @@ export function describeProviders(): string {
       },
       null,
       2,
-    )}\n\nAny Anthropic-Messages-compatible endpoint works: Ollama, LM Studio,\nLiteLLM, llama.cpp server, claude-code-router, GitHub Models, gateways.`
+    )}\n\nAny FlawRA-Messages-compatible endpoint works: Ollama, LM Studio,\nLiteLLM, llama.cpp server, flawra-code-router, GitHub Models, gateways.`
   }
   const activeName = getActiveProviderName()
   const lines: string[] = [`Config: ${PROVIDERS_FILE_PATH}`, '']

@@ -9,40 +9,40 @@ import { expandPath, getDirectoryForPath } from '../../../utils/path.js';
 import { normalizeCaseForComparison, pathInAllowedWorkingPath } from '../../../utils/permissions/filesystem.js';
 import type { OptionWithDescription } from '../../CustomSelect/select.js';
 /**
- * Check if a path is within the project's .claude/ folder.
- * This is used to determine whether to show the special ".claude folder" permission option.
+ * Check if a path is within the project's .flawra/ folder.
+ * This is used to determine whether to show the special ".flawra folder" permission option.
  */
-export function isInClaudeFolder(filePath: string): boolean {
+export function isInFlawraFolder(filePath: string): boolean {
   const absolutePath = expandPath(filePath);
-  const claudeFolderPath = expandPath(`${getOriginalCwd()}/.claude`);
+  const flawraFolderPath = expandPath(`${getOriginalCwd()}/.flawra`);
 
-  // Check if the path is within the project's .claude folder
+  // Check if the path is within the project's .flawra folder
   const normalizedAbsolutePath = normalizeCaseForComparison(absolutePath);
-  const normalizedClaudeFolderPath = normalizeCaseForComparison(claudeFolderPath);
+  const normalizedFlawraFolderPath = normalizeCaseForComparison(flawraFolderPath);
 
-  // Path must start with the .claude folder path (and be inside it, not just the folder itself)
-  return normalizedAbsolutePath.startsWith(normalizedClaudeFolderPath + sep.toLowerCase()) ||
+  // Path must start with the .flawra folder path (and be inside it, not just the folder itself)
+  return normalizedAbsolutePath.startsWith(normalizedFlawraFolderPath + sep.toLowerCase()) ||
   // Also match case where sep is / on posix systems
-  normalizedAbsolutePath.startsWith(normalizedClaudeFolderPath + '/');
+  normalizedAbsolutePath.startsWith(normalizedFlawraFolderPath + '/');
 }
 
 /**
- * Check if a path is within the global ~/.claude/ folder.
- * This is used to determine whether to show the special ".claude folder" permission option
+ * Check if a path is within the global ~/.flawra/ folder.
+ * This is used to determine whether to show the special ".flawra folder" permission option
  * for files in the user's home directory.
  */
-export function isInGlobalClaudeFolder(filePath: string): boolean {
+export function isInGlobalFlawraFolder(filePath: string): boolean {
   const absolutePath = expandPath(filePath);
-  const globalClaudeFolderPath = join(homedir(), '.claude');
+  const globalFlawraFolderPath = join(homedir(), '.flawra');
   const normalizedAbsolutePath = normalizeCaseForComparison(absolutePath);
-  const normalizedGlobalClaudeFolderPath = normalizeCaseForComparison(globalClaudeFolderPath);
-  return normalizedAbsolutePath.startsWith(normalizedGlobalClaudeFolderPath + sep.toLowerCase()) || normalizedAbsolutePath.startsWith(normalizedGlobalClaudeFolderPath + '/');
+  const normalizedGlobalFlawraFolderPath = normalizeCaseForComparison(globalFlawraFolderPath);
+  return normalizedAbsolutePath.startsWith(normalizedGlobalFlawraFolderPath + sep.toLowerCase()) || normalizedAbsolutePath.startsWith(normalizedGlobalFlawraFolderPath + '/');
 }
 export type PermissionOption = {
   type: 'accept-once';
 } | {
   type: 'accept-session';
-  scope?: 'claude-folder' | 'global-claude-folder';
+  scope?: 'flawra-folder' | 'global-flawra-folder';
 } | {
   type: 'reject';
 };
@@ -76,7 +76,7 @@ export function getFilePermissionOptions({
       type: 'input',
       label: 'Yes',
       value: 'yes',
-      placeholder: 'and tell Claude what to do next',
+      placeholder: 'and tell Flawra what to do next',
       onChange: onAcceptFeedbackChange,
       allowEmptySubmitToCancel: true,
       option: {
@@ -94,21 +94,21 @@ export function getFilePermissionOptions({
   }
   const inAllowedPath = pathInAllowedWorkingPath(filePath, toolPermissionContext);
 
-  // Check if this is a .claude/ folder path (project or global)
-  const inClaudeFolder = isInClaudeFolder(filePath);
-  const inGlobalClaudeFolder = isInGlobalClaudeFolder(filePath);
+  // Check if this is a .flawra/ folder path (project or global)
+  const inFlawraFolder = isInFlawraFolder(filePath);
+  const inGlobalFlawraFolder = isInGlobalFlawraFolder(filePath);
 
-  // Option 2: For .claude/ folder, show special option instead of generic session option
+  // Option 2: For .flawra/ folder, show special option instead of generic session option
   // Note: Session-level options are always shown since they only affect in-memory state,
   // not persisted settings. The allowManagedPermissionRulesOnly setting only restricts
   // persisted permission rules.
-  if ((inClaudeFolder || inGlobalClaudeFolder) && operationType !== 'read') {
+  if ((inFlawraFolder || inGlobalFlawraFolder) && operationType !== 'read') {
     options.push({
-      label: 'Yes, and allow Claude to edit its own settings for this session',
-      value: 'yes-claude-folder',
+      label: 'Yes, and allow Flawra to edit its own settings for this session',
+      value: 'yes-flawra-folder',
       option: {
         type: 'accept-session',
-        scope: inGlobalClaudeFolder ? 'global-claude-folder' : 'claude-folder'
+        scope: inGlobalFlawraFolder ? 'global-flawra-folder' : 'flawra-folder'
       }
     });
   } else {
@@ -155,7 +155,7 @@ export function getFilePermissionOptions({
       type: 'input',
       label: 'No',
       value: 'no',
-      placeholder: 'and tell Claude what to do differently',
+      placeholder: 'and tell Flawra what to do differently',
       onChange: onRejectFeedbackChange,
       allowEmptySubmitToCancel: true,
       option: {

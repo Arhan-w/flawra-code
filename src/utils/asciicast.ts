@@ -4,7 +4,7 @@ import { getOriginalCwd, getSessionId } from '../bootstrap/state.js'
 import { createBufferedWriter } from './bufferedWriter.js'
 import { registerCleanup } from './cleanupRegistry.js'
 import { logForDebugging } from './debug.js'
-import { getClaudeConfigHomeDir, isEnvTruthy } from './envUtils.js'
+import { getFlawraConfigHomeDir, isEnvTruthy } from './envUtils.js'
 import { getFsImplementation } from './fsOperations.js'
 import { sanitizePath } from './path.js'
 import { jsonStringify } from './slowOperations.js'
@@ -18,7 +18,7 @@ const recordingState: { filePath: string | null; timestamp: number } = {
 /**
  * Get the asciicast recording file path.
  * FLAWRA-CODE: FLAWRA_RECORD=1 enables built-in terminal recording for demos
- * (writes to ~/.flawra/recordings/). CLAUDE_CODE_TERMINAL_RECORDING=1 keeps
+ * (writes to ~/.flawra/recordings/). FLAWRA_CODE_TERMINAL_RECORDING=1 keeps
  * the original ant-only path. Otherwise: returns null.
  * The path is computed once and cached in recordingState.
  */
@@ -31,7 +31,7 @@ export function getRecordFilePath(): string | null {
     if (process.env.USER_TYPE !== 'ant') {
       return null
     }
-    if (!isEnvTruthy(process.env.CLAUDE_CODE_TERMINAL_RECORDING)) {
+    if (!isEnvTruthy(process.env.FLAWRA_CODE_TERMINAL_RECORDING)) {
       return null
     }
   }
@@ -39,7 +39,7 @@ export function getRecordFilePath(): string | null {
   // Each launch gets its own file so --continue produces multiple recordings.
   const projectsDir = flawraRecord
     ? join(process.env.FLAWRA_HOME || join(process.env.HOME || process.env.USERPROFILE || '.', '.flawra'), 'recordings')
-    : join(getClaudeConfigHomeDir(), 'projects')
+    : join(getFlawraConfigHomeDir(), 'projects')
   const projectDir = join(projectsDir, sanitizePath(getOriginalCwd()))
   recordingState.timestamp = Date.now()
   recordingState.filePath = join(
@@ -60,7 +60,7 @@ export function _resetRecordingStateForTesting(): void {
  */
 export function getSessionRecordingPaths(): string[] {
   const sessionId = getSessionId()
-  const projectsDir = join(getClaudeConfigHomeDir(), 'projects')
+  const projectsDir = join(getFlawraConfigHomeDir(), 'projects')
   const projectDir = join(projectsDir, sanitizePath(getOriginalCwd()))
   try {
     // eslint-disable-next-line custom-rules/no-sync-fs -- called during /share before upload, not in hot path
@@ -90,7 +90,7 @@ export async function renameRecordingForSession(): Promise<void> {
   if (!oldPath || recordingState.timestamp === 0) {
     return
   }
-  const projectsDir = join(getClaudeConfigHomeDir(), 'projects')
+  const projectsDir = join(getFlawraConfigHomeDir(), 'projects')
   const projectDir = join(projectsDir, sanitizePath(getOriginalCwd()))
   const newPath = join(
     projectDir,

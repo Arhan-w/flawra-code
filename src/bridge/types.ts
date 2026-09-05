@@ -3,7 +3,7 @@ export const DEFAULT_SESSION_TIMEOUT_MS = 24 * 60 * 60 * 1000
 
 /** Reusable login guidance appended to bridge auth errors. */
 export const BRIDGE_LOGIN_INSTRUCTION =
-  'Remote Control is only available with claude.ai subscriptions. Please use `/login` to sign in with your claude.ai account.'
+  'Remote Control is only available with flawra.ai subscriptions. Please use `/login` to sign in with your flawra.ai account.'
 
 /** Full error printed when `flawra remote-control` is run without auth. */
 export const BRIDGE_LOGIN_ERROR =
@@ -39,7 +39,7 @@ export type WorkSecret = {
     git_info?: { type: string; repo: string; ref?: string; token?: string }
   }>
   auth: Array<{ type: string; token: string }>
-  claude_code_args?: Record<string, string> | null
+  flawra_code_args?: Record<string, string> | null
   mcp_config?: unknown | null
   environment_variables?: Record<string, string> | null
   /**
@@ -70,13 +70,13 @@ export type SpawnMode = 'single-session' | 'worktree' | 'same-dir'
 
 /**
  * Well-known worker_type values THIS codebase produces. Sent as
- * `metadata.worker_type` at environment registration so claude.ai can filter
+ * `metadata.worker_type` at environment registration so flawra.ai can filter
  * the session picker by origin (e.g. assistant tab only shows assistant
  * workers). The backend treats this as an opaque string — desktop cowork
  * sends `"cowork"`, which isn't in this union. REPL code uses this narrow
  * type for its own exhaustiveness; wire-level fields accept any string.
  */
-export type BridgeWorkerType = 'claude_code' | 'claude_code_assistant'
+export type BridgeWorkerType = 'flawra_code' | 'flawra_code_assistant'
 
 export type BridgeConfig = {
   dir: string

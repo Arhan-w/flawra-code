@@ -1,5 +1,5 @@
 import { feature } from 'bun:bundle'
-import type { Anthropic } from '@anthropic-ai/sdk'
+import type { FlawRA } from '@anthropic-ai/sdk'
 import {
   getSystemPrompt,
   SYSTEM_PROMPT_DYNAMIC_BOUNDARY,
@@ -47,7 +47,7 @@ import type {
   UserMessage,
 } from '../types/message.js'
 import { toolToAPISchema } from './api.js'
-import { filterInjectedMemoryFiles, getMemoryFiles } from './claudemd.js'
+import { filterInjectedMemoryFiles, getMemoryFiles } from './flawramd.js'
 import { getContextWindowForModel } from './context.js'
 import { getCwd } from './cwd.js'
 import { logForDebugging } from './debug.js'
@@ -75,8 +75,8 @@ const MANUAL_COMPACT_BUFFER_NAME = 'Compact buffer'
 export const TOOL_TOKEN_COUNT_OVERHEAD = 500
 
 async function countTokensWithFallback(
-  messages: Anthropic.Beta.Messages.BetaMessageParam[],
-  tools: Anthropic.Beta.Messages.BetaToolUnion[],
+  messages: FlawRA.Beta.Messages.BetaMessageParam[],
+  tools: FlawRA.Beta.Messages.BetaToolUnion[],
 ): Promise<number | null> {
   try {
     const result = await countMessagesTokensWithAPI(messages, tools)
@@ -319,25 +319,25 @@ async function countSystemTokens(
 
 async function countMemoryFileTokens(): Promise<{
   memoryFileDetails: MemoryFile[]
-  claudeMdTokens: number
+  flawraMdTokens: number
 }> {
-  // Simple mode disables CLAUDE.md loading, so don't report tokens for them
-  if (isEnvTruthy(process.env.CLAUDE_CODE_SIMPLE)) {
-    return { memoryFileDetails: [], claudeMdTokens: 0 }
+  // Simple mode disables FLAWRA.md loading, so don't report tokens for them
+  if (isEnvTruthy(process.env.FLAWRA_CODE_SIMPLE)) {
+    return { memoryFileDetails: [], flawraMdTokens: 0 }
   }
 
   const memoryFilesData = filterInjectedMemoryFiles(await getMemoryFiles())
   const memoryFileDetails: MemoryFile[] = []
-  let claudeMdTokens = 0
+  let flawraMdTokens = 0
 
   if (memoryFilesData.length < 1) {
     return {
       memoryFileDetails: [],
-      claudeMdTokens: 0,
+      flawraMdTokens: 0,
     }
   }
 
-  const claudeMdTokenCounts = await Promise.all(
+  const flawraMdTokenCounts = await Promise.all(
     memoryFilesData.map(async file => {
       const tokens = await countTokensWithFallback(
         [{ role: 'user', content: file.content }],
@@ -348,8 +348,8 @@ async function countMemoryFileTokens(): Promise<{
     }),
   )
 
-  for (const { file, tokens } of claudeMdTokenCounts) {
-    claudeMdTokens += tokens
+  for (const { file, tokens } of flawraMdTokenCounts) {
+    flawraMdTokens += tokens
     memoryFileDetails.push({
       path: file.path,
       type: file.type,
@@ -357,7 +357,7 @@ async function countMemoryFileTokens(): Promise<{
     })
   }
 
-  return { claudeMdTokens, memoryFileDetails }
+  return { flawraMdTokens, memoryFileDetails }
 }
 
 async function countBuiltInToolTokens(
@@ -910,7 +910,7 @@ async function approximateMessageTokens(
         }
       }
       return _.message
-    }) as Anthropic.Beta.Messages.BetaMessageParam[],
+    }) as FlawRA.Beta.Messages.BetaMessageParam[],
     [],
   )
 
@@ -952,7 +952,7 @@ export async function analyzeContextUsage(
   // Critical operations that should not fail due to skills
   const [
     { systemPromptTokens, systemPromptSections },
-    { claudeMdTokens, memoryFileDetails },
+    { flawraMdTokens, memoryFileDetails },
     {
       builtInToolTokens,
       deferredBuiltinDetails,
@@ -1073,11 +1073,11 @@ export async function analyzeContextUsage(
   }
 
   // Memory files after custom agents
-  if (claudeMdTokens > 0) {
+  if (flawraMdTokens > 0) {
     cats.push({
       name: 'Memory files',
-      tokens: claudeMdTokens,
-      color: 'claude',
+      tokens: flawraMdTokens,
+      color: 'flawra',
     })
   }
 

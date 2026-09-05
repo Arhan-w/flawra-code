@@ -5,56 +5,56 @@
 import axios from 'axios'
 import { OAUTH_BETA_HEADER } from '../constants/oauth.js'
 import {
-  getAnthropicApiKey,
-  getClaudeAIOAuthTokens,
+  getFlawRAApiKey,
+  getFlawraAIOAuthTokens,
   handleOAuth401Error,
-  isClaudeAISubscriber,
+  isFlawraAISubscriber,
 } from './auth.js'
-import { getClaudeCodeUserAgent } from './userAgent.js'
+import { getFlawraCodeUserAgent } from './userAgent.js'
 import { getWorkload } from './workloadContext.js'
 
-// WARNING: We rely on `claude-cli` in the user agent for log filtering.
+// WARNING: We rely on `flawra-cli` in the user agent for log filtering.
 // Please do NOT change this without making sure that logging also gets updated!
 export function getUserAgent(): string {
-  const agentSdkVersion = process.env.CLAUDE_AGENT_SDK_VERSION
-    ? `, agent-sdk/${process.env.CLAUDE_AGENT_SDK_VERSION}`
+  const agentSdkVersion = process.env.FLAWRA_AGENT_SDK_VERSION
+    ? `, agent-sdk/${process.env.FLAWRA_AGENT_SDK_VERSION}`
     : ''
-  // SDK consumers can identify their app/library via CLAUDE_AGENT_SDK_CLIENT_APP
+  // SDK consumers can identify their app/library via FLAWRA_AGENT_SDK_CLIENT_APP
   // e.g., "my-app/1.0.0" or "my-library/2.1"
-  const clientApp = process.env.CLAUDE_AGENT_SDK_CLIENT_APP
-    ? `, client-app/${process.env.CLAUDE_AGENT_SDK_CLIENT_APP}`
+  const clientApp = process.env.FLAWRA_AGENT_SDK_CLIENT_APP
+    ? `, client-app/${process.env.FLAWRA_AGENT_SDK_CLIENT_APP}`
     : ''
   // Turn-/process-scoped workload tag for cron-initiated requests. 1P-only
   // observability — proxies strip HTTP headers; QoS routing uses cc_workload
   // in the billing-header attribution block instead (see constants/system.ts).
-  // getAnthropicClient (client.ts:98) calls this per-request inside withRetry,
+  // getFlawRAClient (client.ts:98) calls this per-request inside withRetry,
   // so the read picks up the same setWorkload() value as getAttributionHeader.
   const workload = getWorkload()
   const workloadSuffix = workload ? `, workload/${workload}` : ''
-  return `claude-cli/${MACRO.VERSION} (${process.env.USER_TYPE}, ${process.env.CLAUDE_CODE_ENTRYPOINT ?? 'cli'}${agentSdkVersion}${clientApp}${workloadSuffix})`
+  return `flawra-cli/${MACRO.VERSION} (${process.env.USER_TYPE}, ${process.env.FLAWRA_CODE_ENTRYPOINT ?? 'cli'}${agentSdkVersion}${clientApp}${workloadSuffix})`
 }
 
 export function getMCPUserAgent(): string {
   const parts: string[] = []
-  if (process.env.CLAUDE_CODE_ENTRYPOINT) {
-    parts.push(process.env.CLAUDE_CODE_ENTRYPOINT)
+  if (process.env.FLAWRA_CODE_ENTRYPOINT) {
+    parts.push(process.env.FLAWRA_CODE_ENTRYPOINT)
   }
-  if (process.env.CLAUDE_AGENT_SDK_VERSION) {
-    parts.push(`agent-sdk/${process.env.CLAUDE_AGENT_SDK_VERSION}`)
+  if (process.env.FLAWRA_AGENT_SDK_VERSION) {
+    parts.push(`agent-sdk/${process.env.FLAWRA_AGENT_SDK_VERSION}`)
   }
-  if (process.env.CLAUDE_AGENT_SDK_CLIENT_APP) {
-    parts.push(`client-app/${process.env.CLAUDE_AGENT_SDK_CLIENT_APP}`)
+  if (process.env.FLAWRA_AGENT_SDK_CLIENT_APP) {
+    parts.push(`client-app/${process.env.FLAWRA_AGENT_SDK_CLIENT_APP}`)
   }
   const suffix = parts.length > 0 ? ` (${parts.join(', ')})` : ''
-  return `claude-code/${MACRO.VERSION}${suffix}`
+  return `flawra-code/${MACRO.VERSION}${suffix}`
 }
 
-// User-Agent for WebFetch requests to arbitrary sites. `Claude-User` is
-// Anthropic's publicly documented agent for user-initiated fetches (what site
-// operators match in robots.txt); the claude-code suffix lets them distinguish
-// local CLI traffic from claude.ai server-side fetches.
+// User-Agent for WebFetch requests to arbitrary sites. `Flawra-User` is
+// FlawRA's publicly documented agent for user-initiated fetches (what site
+// operators match in robots.txt); the flawra-code suffix lets them distinguish
+// local CLI traffic from flawra.ai server-side fetches.
 export function getWebFetchUserAgent(): string {
-  return `Claude-User (${getClaudeCodeUserAgent()}; +https://support.anthropic.com/)`
+  return `Flawra-User (${getFlawraCodeUserAgent()}; +https://support.anthropic.com/)`
 }
 
 export type AuthHeaders = {
@@ -67,8 +67,8 @@ export type AuthHeaders = {
  * Returns either OAuth headers for Max/Pro users or API key headers for regular users
  */
 export function getAuthHeaders(): AuthHeaders {
-  if (isClaudeAISubscriber()) {
-    const oauthTokens = getClaudeAIOAuthTokens()
+  if (isFlawraAISubscriber()) {
+    const oauthTokens = getFlawraAIOAuthTokens()
     if (!oauthTokens?.accessToken) {
       return {
         headers: {},
@@ -83,8 +83,8 @@ export function getAuthHeaders(): AuthHeaders {
     }
   }
   // TODO: this will fail if the API key is being set to an LLM Gateway key
-  // should we try to query keychain / credentials for a valid Anthropic key?
-  const apiKey = getAnthropicApiKey()
+  // should we try to query keychain / credentials for a valid FlawRA key?
+  const apiKey = getFlawRAApiKey()
   if (!apiKey) {
     return {
       headers: {},
@@ -128,7 +128,7 @@ export async function withOAuth401Retry<T>(
         typeof err.response?.data === 'string' &&
         err.response.data.includes('OAuth token has been revoked'))
     if (!isAuthError) throw err
-    const failedAccessToken = getClaudeAIOAuthTokens()?.accessToken
+    const failedAccessToken = getFlawraAIOAuthTokens()?.accessToken
     if (!failedAccessToken) throw err
     await handleOAuth401Error(failedAccessToken)
     return await request()

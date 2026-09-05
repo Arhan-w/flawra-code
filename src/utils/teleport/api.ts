@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto'
 import { getOauthConfig } from 'src/constants/oauth.js'
 import { getOrganizationUUID } from 'src/services/oauth/client.js'
 import z from 'zod/v4'
-import { getClaudeAIOAuthTokens } from '../auth.js'
+import { getFlawraAIOAuthTokens } from '../auth.js'
 import { logForDebugging } from '../debug.js'
 import { parseGitHubRepository } from '../detectRepository.js'
 import { errorMessage, toError } from '../errors.js'
@@ -182,10 +182,10 @@ export async function prepareApiRequest(): Promise<{
   accessToken: string
   orgUUID: string
 }> {
-  const accessToken = getClaudeAIOAuthTokens()?.accessToken
+  const accessToken = getFlawraAIOAuthTokens()?.accessToken
   if (accessToken === undefined) {
     throw new Error(
-      'FLAWRA-CODE web sessions require authentication with a Claude.ai account. API key authentication is not sufficient. Please run /login to authenticate, or check your authentication status with /status.',
+      'FLAWRA-CODE web sessions require authentication with a Flawra.ai account. API key authentication is not sufficient. Please run /login to authenticate, or check your authentication status with /status.',
     )
   }
 
@@ -344,7 +344,7 @@ export function getBranchFromSession(
 /**
  * Content for a remote session message.
  * Accepts a plain string or an array of content blocks (text, image, etc.)
- * following the Anthropic API messages spec.
+ * following the FlawRA API messages spec.
  */
 export type RemoteMessageContent =
   | string

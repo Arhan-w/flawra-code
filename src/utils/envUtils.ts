@@ -3,22 +3,22 @@ import { homedir } from 'os'
 import { join } from 'path'
 
 // Memoized: 150+ callers, many on hot paths. FLAWRA-CODE keeps its own config
-// home (~/.flawra) so it never reads Claude Code's ~/.claude credentials,
+// home (~/.flawra) so it never reads Flawra Code's ~/.flawra credentials,
 // /login managed keys, or OAuth tokens. FLAWRA_CONFIG_DIR wins, then
-// CLAUDE_CONFIG_DIR for compatibility.
-export const getClaudeConfigHomeDir = memoize(
+// FLAWRA_CONFIG_DIR for compatibility.
+export const getFlawraConfigHomeDir = memoize(
   (): string => {
     return (
       process.env.FLAWRA_CONFIG_DIR ??
-      process.env.CLAUDE_CONFIG_DIR ??
+      process.env.FLAWRA_CONFIG_DIR ??
       join(homedir(), '.flawra')
     ).normalize('NFC')
   },
-  () => process.env.FLAWRA_CONFIG_DIR ?? process.env.CLAUDE_CONFIG_DIR,
+  () => process.env.FLAWRA_CONFIG_DIR ?? process.env.FLAWRA_CONFIG_DIR,
 )
 
 export function getTeamsDir(): string {
-  return join(getClaudeConfigHomeDir(), 'teams')
+  return join(getFlawraConfigHomeDir(), 'teams')
 }
 
 /**
@@ -51,19 +51,19 @@ export function isEnvDefinedFalsy(
 }
 
 /**
- * --bare / CLAUDE_CODE_SIMPLE — skip hooks, LSP, plugin sync, skill dir-walk,
+ * --bare / FLAWRA_CODE_SIMPLE — skip hooks, LSP, plugin sync, skill dir-walk,
  * attribution, background prefetches, and ALL keychain/credential reads.
  * Auth is strictly ANTHROPIC_API_KEY env or apiKeyHelper from --settings.
  * Explicit CLI flags (--plugin-dir, --add-dir, --mcp-config) still honored.
  * ~30 gates across the codebase.
  *
  * Checks argv directly (in addition to the env var) because several gates
- * run before main.tsx's action handler sets CLAUDE_CODE_SIMPLE=1 from --bare
+ * run before main.tsx's action handler sets FLAWRA_CODE_SIMPLE=1 from --bare
  * — notably startKeychainPrefetch() at main.tsx top-level.
  */
 export function isBareMode(): boolean {
   return (
-    isEnvTruthy(process.env.CLAUDE_CODE_SIMPLE) ||
+    isEnvTruthy(process.env.FLAWRA_CODE_SIMPLE) ||
     process.argv.includes('--bare')
   )
 }
@@ -95,7 +95,7 @@ export function parseEnvVars(
 
 /**
  * Get the AWS region with fallback to default
- * Matches the Anthropic Bedrock SDK's region behavior
+ * Matches the FlawRA Bedrock SDK's region behavior
  */
 export function getAWSRegion(): string {
   return process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || 'us-east-1'
@@ -110,10 +110,10 @@ export function getDefaultVertexRegion(): string {
 
 /**
  * Check if bash commands should maintain project working directory (reset to original after each command)
- * @returns true if CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR is set to a truthy value
+ * @returns true if FLAWRA_BASH_MAINTAIN_PROJECT_WORKING_DIR is set to a truthy value
  */
 export function shouldMaintainProjectWorkingDir(): boolean {
-  return isEnvTruthy(process.env.CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR)
+  return isEnvTruthy(process.env.FLAWRA_BASH_MAINTAIN_PROJECT_WORKING_DIR)
 }
 
 /**
@@ -154,18 +154,18 @@ export function isInProtectedNamespace(): boolean {
 /**
  * Model prefix → env var for Vertex region overrides.
  * Order matters: more specific prefixes must come before less specific ones
- * (e.g., 'claude-opus-4-1' before 'claude-opus-4').
+ * (e.g., 'flawra-opus-4-1' before 'flawra-opus-4').
  */
 const VERTEX_REGION_OVERRIDES: ReadonlyArray<[string, string]> = [
-  ['claude-haiku-4-5', 'VERTEX_REGION_CLAUDE_HAIKU_4_5'],
-  ['claude-3-5-haiku', 'VERTEX_REGION_CLAUDE_3_5_HAIKU'],
-  ['claude-3-5-sonnet', 'VERTEX_REGION_CLAUDE_3_5_SONNET'],
-  ['claude-3-7-sonnet', 'VERTEX_REGION_CLAUDE_3_7_SONNET'],
-  ['claude-opus-4-1', 'VERTEX_REGION_CLAUDE_4_1_OPUS'],
-  ['claude-opus-4', 'VERTEX_REGION_CLAUDE_4_0_OPUS'],
-  ['claude-sonnet-4-6', 'VERTEX_REGION_CLAUDE_4_6_SONNET'],
-  ['claude-sonnet-4-5', 'VERTEX_REGION_CLAUDE_4_5_SONNET'],
-  ['claude-sonnet-4', 'VERTEX_REGION_CLAUDE_4_0_SONNET'],
+  ['flawra-haiku-4-5', 'VERTEX_REGION_FLAWRA_HAIKU_4_5'],
+  ['flawra-3-5-haiku', 'VERTEX_REGION_FLAWRA_3_5_HAIKU'],
+  ['flawra-3-5-sonnet', 'VERTEX_REGION_FLAWRA_3_5_SONNET'],
+  ['flawra-3-7-sonnet', 'VERTEX_REGION_FLAWRA_3_7_SONNET'],
+  ['flawra-opus-4-1', 'VERTEX_REGION_FLAWRA_4_1_OPUS'],
+  ['flawra-opus-4', 'VERTEX_REGION_FLAWRA_4_0_OPUS'],
+  ['flawra-sonnet-4-6', 'VERTEX_REGION_FLAWRA_4_6_SONNET'],
+  ['flawra-sonnet-4-5', 'VERTEX_REGION_FLAWRA_4_5_SONNET'],
+  ['flawra-sonnet-4', 'VERTEX_REGION_FLAWRA_4_0_SONNET'],
 ]
 
 /**

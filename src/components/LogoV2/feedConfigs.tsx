@@ -39,7 +39,7 @@ export function createWhatsNewFeed(releaseNotes: string[]): FeedConfig {
       text: note
     };
   });
-  const emptyMessage = (process.env.USER_TYPE) === 'ant' ? 'Unable to fetch latest claude-cli-internal commits' : 'Check the FLAWRA-CODE changelog for updates';
+  const emptyMessage = (process.env.USER_TYPE) === 'ant' ? 'Unable to fetch latest flawra-cli-internal commits' : 'Check the FLAWRA-CODE changelog for updates';
   return {
     title: (process.env.USER_TYPE) === 'ant' ? "What's new [ANT-ONLY: Latest CC commits]" : "What's new",
     lines,
@@ -60,7 +60,7 @@ export function createProjectOnboardingFeed(steps: Step[]): FeedConfig {
       text: `${checkmark}${text}`
     };
   });
-  const warningText = getCwd() === homedir() ? 'Note: You have launched claude in your home directory. For the best experience, launch it in a project directory instead.' : undefined;
+  const warningText = getCwd() === homedir() ? 'Note: You have launched flawra in your home directory. For the best experience, launch it in a project directory instead.' : undefined;
   if (warningText) {
     lines.push({
       text: warningText
@@ -80,7 +80,7 @@ export function createGuestPassesFeed(): FeedConfig {
     customContent: {
       content: <>
           <Box marginY={1}>
-            <Text color="claude">[◈] [◈] [◈]</Text>
+            <Text color="flawra">[◈] [◈] [◈]</Text>
           </Box>
           <Text dimColor>{subtitle}</Text>
         </>,

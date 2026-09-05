@@ -3,8 +3,8 @@ import type { Command } from '../../commands.js'
 
 const command: Command = {
   name: 'chrome',
-  description: 'Claude in Chrome (Beta) settings',
-  availability: ['claude-ai'],
+  description: 'Flawra in Chrome (Beta) settings',
+  availability: ['flawra-ai'],
   isEnabled: () => !getIsNonInteractiveSession(),
   type: 'local-jsx',
   load: () => import('./chrome.js'),

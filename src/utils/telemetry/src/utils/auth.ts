@@ -2,4 +2,4 @@
 export type getOtelHeadersFromHelper = any;
 export type getSubscriptionType = any;
 export type is1PApiCustomer = any;
-export type isClaudeAISubscriber = any;
+export type isFlawraAISubscriber = any;

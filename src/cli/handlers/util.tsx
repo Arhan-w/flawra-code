@@ -16,13 +16,13 @@ import { logEvent } from '../../services/analytics/index.js';
 import { MCPConnectionManager } from '../../services/mcp/MCPConnectionManager.js';
 import { AppStateProvider } from '../../state/AppState.js';
 import { onChangeAppState } from '../../state/onChangeAppState.js';
-import { isAnthropicAuthEnabled } from '../../utils/auth.js';
+import { isFlawRAAuthEnabled } from '../../utils/auth.js';
 export async function setupTokenHandler(root: Root): Promise<void> {
   logEvent('tengu_setup_token_command', {});
-  const showAuthWarning = !isAnthropicAuthEnabled();
+  const showAuthWarning = !isFlawRAAuthEnabled();
   const {
-    ConsoleOAuthFlow
-  } = await import('../../components/ConsoleOAuthFlow.js');
+    FlawraConsoleOAuthFlow
+  } = await import('../../components/FlawraConsoleOAuthFlow.js');
   await new Promise<void>(resolve => {
     root.render(<AppStateProvider onChangeAppState={onChangeAppState}>
         <KeybindingSetup>
@@ -38,9 +38,9 @@ export async function setupTokenHandler(root: Root): Promise<void> {
                   you can use instead.
                 </Text>
               </Box>}
-            <ConsoleOAuthFlow onDone={() => {
+            <FlawraConsoleOAuthFlow onDone={() => {
             void resolve();
-          }} mode="setup-token" startingMessage="This will guide you through long-lived (1-year) auth token setup for your Claude account. Claude subscription required." />
+          }} mode="setup-token" startingMessage="This will guide you through long-lived (1-year) auth token setup for your Flawra account. Flawra subscription required." />
           </Box>
         </KeybindingSetup>
       </AppStateProvider>);

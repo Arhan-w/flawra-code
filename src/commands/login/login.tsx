@@ -5,7 +5,7 @@ import { resetCostState } from '../../bootstrap/state.js';
 import { clearTrustedDeviceToken, enrollTrustedDevice } from '../../bridge/trustedDevice.js';
 import type { LocalJSXCommandContext } from '../../commands.js';
 import { ConfigurableShortcutHint } from '../../components/ConfigurableShortcutHint.js';
-import { ConsoleOAuthFlow } from '../../components/ConsoleOAuthFlow.js';
+import { FlawraConsoleOAuthFlow } from '../../components/FlawraConsoleOAuthFlow.js';
 import { Dialog } from '../../components/design-system/Dialog.js';
 import { useMainLoopModel } from '../../hooks/useMainLoopModel.js';
 import { Text } from '../../ink.js';
@@ -32,7 +32,7 @@ export async function call(onDone: LocalJSXCommandOnDone, context: LocalJSXComma
       void refreshPolicyLimits();
       // Clear user data cache BEFORE GrowthBook refresh so it picks up fresh credentials
       resetUserCache();
-      // Refresh GrowthBook after login to get updated feature flags (e.g., for claude.ai MCPs)
+      // Refresh GrowthBook after login to get updated feature flags (e.g., for flawra.ai MCPs)
       refreshGrowthBookAfterAuthChange();
       // Clear any stale trusted device token from a previous account before
       // re-enrolling — prevents sending the old token on bridge calls while
@@ -80,7 +80,7 @@ export function Login(props) {
   }
   let t2;
   if ($[6] !== props.startingMessage || $[7] !== t1) {
-    t2 = <ConsoleOAuthFlow onDone={t1} startingMessage={props.startingMessage} />;
+    t2 = <FlawraConsoleOAuthFlow onDone={t1} startingMessage={props.startingMessage} />;
     $[6] = props.startingMessage;
     $[7] = t1;
     $[8] = t2;

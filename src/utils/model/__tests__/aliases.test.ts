@@ -31,7 +31,7 @@ describe("isModelAlias", () => {
   });
 
   test("returns false for full model ID", () => {
-    expect(isModelAlias("claude-sonnet-4-6-20250514")).toBe(false);
+    expect(isModelAlias("flawra-sonnet-4-6-20250514")).toBe(false);
   });
 
   test("returns false for unknown string", () => {

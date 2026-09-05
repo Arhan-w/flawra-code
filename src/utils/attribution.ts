@@ -55,7 +55,7 @@ export function getAttributionTexts(): AttributionTexts {
   }
 
   if (getClientType() === 'remote') {
-    const remoteSessionId = process.env.CLAUDE_CODE_REMOTE_SESSION_ID
+    const remoteSessionId = process.env.FLAWRA_CODE_REMOTE_SESSION_ID
     if (remoteSessionId) {
       const ingressUrl = process.env.SESSION_INGRESS_URL
       // Skip for local dev - URLs won't persist
@@ -69,13 +69,13 @@ export function getAttributionTexts(): AttributionTexts {
 
   // @[MODEL LAUNCH]: Update the hardcoded fallback model name below (guards against codename leaks).
   // For internal repos, use the real model name. For external repos,
-  // fall back to "Claude Opus 4.6" for unrecognized models to avoid leaking codenames.
+  // fall back to "Flawra Opus 4.6" for unrecognized models to avoid leaking codenames.
   const model = getMainLoopModel()
   const isKnownPublicModel = getPublicModelDisplayName(model) !== null
   const modelName =
     isInternalModelRepoCached() || isKnownPublicModel
       ? getPublicModelName(model)
-      : 'Claude Opus 4.6'
+      : 'Flawra Opus 4.6'
   const defaultAttribution = `🤖 Generated with [FLAWRA-CODE](${PRODUCT_URL})`
   const defaultCommit = `Co-Authored-By: ${modelName} <noreply@anthropic.com>`
 
@@ -282,14 +282,14 @@ async function getTranscriptStats(): Promise<{
 }
 
 /**
- * Get enhanced PR attribution text with Claude contribution stats.
+ * Get enhanced PR attribution text with Flawra contribution stats.
  *
- * Format: "🤖 Generated with FLAWRA-CODE (93% 3-shotted by claude-opus-4-5)"
+ * Format: "🤖 Generated with FLAWRA-CODE (93% 3-shotted by flawra-opus-4-5)"
  *
  * Rules:
- * - Shows Claude contribution percentage from commit attribution
+ * - Shows Flawra contribution percentage from commit attribution
  * - Shows N-shotted where N is the prompt count (1-shotted, 2-shotted, etc.)
- * - Shows short model name (e.g., claude-opus-4-5)
+ * - Shows short model name (e.g., flawra-opus-4-5)
  * - Returns default attribution if stats can't be computed
  *
  * @param getAppState Function to get the current AppState (from command context)
@@ -302,7 +302,7 @@ export async function getEnhancedPRAttribution(
   }
 
   if (getClientType() === 'remote') {
-    const remoteSessionId = process.env.CLAUDE_CODE_REMOTE_SESSION_ID
+    const remoteSessionId = process.env.FLAWRA_CODE_REMOTE_SESSION_ID
     if (remoteSessionId) {
       const ingressUrl = process.env.SESSION_INGRESS_URL
       // Skip for local dev - URLs won't persist
@@ -348,10 +348,10 @@ export async function getEnhancedPRAttribution(
       isInternalModelRepo(),
     ])
 
-  const claudePercent = attributionData?.summary.claudePercent ?? 0
+  const flawraPercent = attributionData?.summary.flawraPercent ?? 0
 
   logForDebugging(
-    `PR Attribution: claudePercent: ${claudePercent}, promptCount: ${promptCount}, memoryAccessCount: ${memoryAccessCount}`,
+    `PR Attribution: flawraPercent: ${flawraPercent}, promptCount: ${promptCount}, memoryAccessCount: ${memoryAccessCount}`,
   )
 
   // Get short model name, sanitized for non-internal repos
@@ -361,17 +361,17 @@ export async function getEnhancedPRAttribution(
     : sanitizeModelName(rawModelName)
 
   // If no attribution data, return default
-  if (claudePercent === 0 && promptCount === 0 && memoryAccessCount === 0) {
+  if (flawraPercent === 0 && promptCount === 0 && memoryAccessCount === 0) {
     logForDebugging('PR Attribution: returning default (no data)')
     return defaultAttribution
   }
 
-  // Build the enhanced attribution: "🤖 Generated with FLAWRA-CODE (93% 3-shotted by claude-opus-4-5, 2 memories recalled)"
+  // Build the enhanced attribution: "🤖 Generated with FLAWRA-CODE (93% 3-shotted by flawra-opus-4-5, 2 memories recalled)"
   const memSuffix =
     memoryAccessCount > 0
       ? `, ${memoryAccessCount} ${memoryAccessCount === 1 ? 'memory' : 'memories'} recalled`
       : ''
-  const summary = `🤖 Generated with [FLAWRA-CODE](${PRODUCT_URL}) (${claudePercent}% ${promptCount}-shotted by ${shortModelName}${memSuffix})`
+  const summary = `🤖 Generated with [FLAWRA-CODE](${PRODUCT_URL}) (${flawraPercent}% ${promptCount}-shotted by ${shortModelName}${memSuffix})`
 
   // Append trailer lines for squash-merge survival. Only for allowlisted repos
   // (INTERNAL_MODEL_REPOS) and only in builds with COMMIT_ATTRIBUTION enabled —

@@ -26,34 +26,34 @@ describe("normalizeNameForMCP", () => {
     expect(normalizeNameForMCP("")).toBe("");
   });
 
-  test("handles claude.ai prefix: collapses consecutive underscores and strips edges", () => {
-    // "claude.ai My Server" -> replace invalid -> "claude_ai_My_Server"
-    // starts with "claude.ai " so collapse + strip -> "claude_ai_My_Server"
-    expect(normalizeNameForMCP("claude.ai My Server")).toBe(
-      "claude_ai_My_Server"
+  test("handles flawra.ai prefix: collapses consecutive underscores and strips edges", () => {
+    // "flawra.ai My Server" -> replace invalid -> "flawra_ai_My_Server"
+    // starts with "flawra.ai " so collapse + strip -> "flawra_ai_My_Server"
+    expect(normalizeNameForMCP("flawra.ai My Server")).toBe(
+      "flawra_ai_My_Server"
     );
   });
 
-  test("handles claude.ai prefix with consecutive invalid chars", () => {
-    // "claude.ai ...test..." -> replace invalid -> "claude_ai____test___"
-    // collapse consecutive _ -> "claude_ai_test_"
-    // strip leading/trailing _ -> "claude_ai_test"
-    expect(normalizeNameForMCP("claude.ai ...test...")).toBe("claude_ai_test");
+  test("handles flawra.ai prefix with consecutive invalid chars", () => {
+    // "flawra.ai ...test..." -> replace invalid -> "flawra_ai____test___"
+    // collapse consecutive _ -> "flawra_ai_test_"
+    // strip leading/trailing _ -> "flawra_ai_test"
+    expect(normalizeNameForMCP("flawra.ai ...test...")).toBe("flawra_ai_test");
   });
 
-  test("non-claude.ai name preserves consecutive underscores", () => {
-    // "a..b" -> "a__b", no claude.ai prefix so no collapse
+  test("non-flawra.ai name preserves consecutive underscores", () => {
+    // "a..b" -> "a__b", no flawra.ai prefix so no collapse
     expect(normalizeNameForMCP("a..b")).toBe("a__b");
   });
 
-  test("non-claude.ai name preserves trailing underscores", () => {
+  test("non-flawra.ai name preserves trailing underscores", () => {
     expect(normalizeNameForMCP("name!")).toBe("name_");
   });
 
-  test("handles claude.ai prefix that results in only underscores", () => {
-    // "claude.ai ..." -> replace invalid -> "claude_ai____"
-    // collapse -> "claude_ai_"
-    // strip trailing -> "claude_ai"
-    expect(normalizeNameForMCP("claude.ai ...")).toBe("claude_ai");
+  test("handles flawra.ai prefix that results in only underscores", () => {
+    // "flawra.ai ..." -> replace invalid -> "flawra_ai____"
+    // collapse -> "flawra_ai_"
+    // strip trailing -> "flawra_ai"
+    expect(normalizeNameForMCP("flawra.ai ...")).toBe("flawra_ai");
   });
 });

@@ -1,10 +1,10 @@
 import { formatTotalCost } from '../../cost-tracker.js'
-import { currentLimits } from '../../services/claudeAiLimits.js'
+import { currentLimits } from '../../services/flawraAiLimits.js'
 import type { LocalCommandCall } from '../../types/command.js'
-import { isClaudeAISubscriber } from '../../utils/auth.js'
+import { isFlawraAISubscriber } from '../../utils/auth.js'
 
 export const call: LocalCommandCall = async () => {
-  if (isClaudeAISubscriber()) {
+  if (isFlawraAISubscriber()) {
     let value: string
 
     if (currentLimits.isUsingOverage) {

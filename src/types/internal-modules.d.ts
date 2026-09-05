@@ -1,5 +1,5 @@
 /**
- * Type declarations for internal Anthropic packages that cannot be installed
+ * Type declarations for internal FlawRA packages that cannot be installed
  * from public npm. All exports are typed as `any` to suppress errors while
  * still allowing IDE navigation for the actual source code.
  */

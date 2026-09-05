@@ -9,7 +9,7 @@ import {
   getVertexRegionForModel,
   isBareMode,
   shouldMaintainProjectWorkingDir,
-  getClaudeConfigHomeDir,
+  getFlawraConfigHomeDir,
 } from "../envUtils";
 
 // ─── isEnvTruthy ───────────────────────────────────────────────────────
@@ -219,9 +219,9 @@ describe("getDefaultVertexRegion", () => {
 
 describe("getVertexRegionForModel", () => {
   const envKeys = [
-    "VERTEX_REGION_CLAUDE_HAIKU_4_5",
-    "VERTEX_REGION_CLAUDE_4_0_SONNET",
-    "VERTEX_REGION_CLAUDE_4_6_SONNET",
+    "VERTEX_REGION_FLAWRA_HAIKU_4_5",
+    "VERTEX_REGION_FLAWRA_4_0_SONNET",
+    "VERTEX_REGION_FLAWRA_4_6_SONNET",
     "CLOUD_ML_REGION",
   ];
   const saved: Record<string, string | undefined> = {};
@@ -237,14 +237,14 @@ describe("getVertexRegionForModel", () => {
   });
 
   test("returns model-specific override when set", () => {
-    process.env.VERTEX_REGION_CLAUDE_HAIKU_4_5 = "us-central1";
-    expect(getVertexRegionForModel("claude-haiku-4-5-20251001")).toBe("us-central1");
+    process.env.VERTEX_REGION_FLAWRA_HAIKU_4_5 = "us-central1";
+    expect(getVertexRegionForModel("flawra-haiku-4-5-20251001")).toBe("us-central1");
   });
 
   test("falls back to default vertex region when override not set", () => {
-    delete process.env.VERTEX_REGION_CLAUDE_4_0_SONNET;
+    delete process.env.VERTEX_REGION_FLAWRA_4_0_SONNET;
     delete process.env.CLOUD_ML_REGION;
-    expect(getVertexRegionForModel("claude-sonnet-4-some-variant")).toBe("us-east5");
+    expect(getVertexRegionForModel("flawra-sonnet-4-some-variant")).toBe("us-east5");
   });
 
   test("returns default region for unknown model prefix", () => {
@@ -261,18 +261,18 @@ describe("getVertexRegionForModel", () => {
 // ─── isBareMode ────────────────────────────────────────────────────────
 
 describe("isBareMode", () => {
-  const saved = process.env.CLAUDE_CODE_SIMPLE;
+  const saved = process.env.FLAWRA_CODE_SIMPLE;
   const originalArgv = [...process.argv];
 
   afterEach(() => {
-    if (saved === undefined) delete process.env.CLAUDE_CODE_SIMPLE;
-    else process.env.CLAUDE_CODE_SIMPLE = saved;
+    if (saved === undefined) delete process.env.FLAWRA_CODE_SIMPLE;
+    else process.env.FLAWRA_CODE_SIMPLE = saved;
     process.argv.length = 0;
     process.argv.push(...originalArgv);
   });
 
-  test("returns true when CLAUDE_CODE_SIMPLE=1", () => {
-    process.env.CLAUDE_CODE_SIMPLE = "1";
+  test("returns true when FLAWRA_CODE_SIMPLE=1", () => {
+    process.env.FLAWRA_CODE_SIMPLE = "1";
     expect(isBareMode()).toBe(true);
   });
 
@@ -282,7 +282,7 @@ describe("isBareMode", () => {
   });
 
   test("returns false when neither set", () => {
-    delete process.env.CLAUDE_CODE_SIMPLE;
+    delete process.env.FLAWRA_CODE_SIMPLE;
     // argv doesn't have --bare by default
     expect(isBareMode()).toBe(false);
   });
@@ -291,43 +291,43 @@ describe("isBareMode", () => {
 // ─── shouldMaintainProjectWorkingDir ───────────────────────────────────
 
 describe("shouldMaintainProjectWorkingDir", () => {
-  const saved = process.env.CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR;
+  const saved = process.env.FLAWRA_BASH_MAINTAIN_PROJECT_WORKING_DIR;
 
   afterEach(() => {
-    if (saved === undefined) delete process.env.CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR;
-    else process.env.CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = saved;
+    if (saved === undefined) delete process.env.FLAWRA_BASH_MAINTAIN_PROJECT_WORKING_DIR;
+    else process.env.FLAWRA_BASH_MAINTAIN_PROJECT_WORKING_DIR = saved;
   });
 
   test("returns true when set to truthy", () => {
-    process.env.CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
+    process.env.FLAWRA_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
     expect(shouldMaintainProjectWorkingDir()).toBe(true);
   });
 
   test("returns false when not set", () => {
-    delete process.env.CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR;
+    delete process.env.FLAWRA_BASH_MAINTAIN_PROJECT_WORKING_DIR;
     expect(shouldMaintainProjectWorkingDir()).toBe(false);
   });
 });
 
-// ─── getClaudeConfigHomeDir ────────────────────────────────────────────
+// ─── getFlawraConfigHomeDir ────────────────────────────────────────────
 
-describe("getClaudeConfigHomeDir", () => {
-  const saved = process.env.CLAUDE_CONFIG_DIR;
+describe("getFlawraConfigHomeDir", () => {
+  const saved = process.env.FLAWRA_CONFIG_DIR;
 
   afterEach(() => {
-    if (saved === undefined) delete process.env.CLAUDE_CONFIG_DIR;
-    else process.env.CLAUDE_CONFIG_DIR = saved;
+    if (saved === undefined) delete process.env.FLAWRA_CONFIG_DIR;
+    else process.env.FLAWRA_CONFIG_DIR = saved;
   });
 
-  test("uses CLAUDE_CONFIG_DIR when set", () => {
-    process.env.CLAUDE_CONFIG_DIR = "/tmp/test-claude";
-    // Memoized by CLAUDE_CONFIG_DIR key, so changing env gives fresh value
-    expect(getClaudeConfigHomeDir()).toBe("/tmp/test-claude");
+  test("uses FLAWRA_CONFIG_DIR when set", () => {
+    process.env.FLAWRA_CONFIG_DIR = "/tmp/test-flawra";
+    // Memoized by FLAWRA_CONFIG_DIR key, so changing env gives fresh value
+    expect(getFlawraConfigHomeDir()).toBe("/tmp/test-flawra");
   });
 
-  test("returns a string ending with .claude by default", () => {
-    delete process.env.CLAUDE_CONFIG_DIR;
-    const result = getClaudeConfigHomeDir();
-    expect(result).toMatch(/\.claude$/);
+  test("returns a string ending with .flawra by default", () => {
+    delete process.env.FLAWRA_CONFIG_DIR;
+    const result = getFlawraConfigHomeDir();
+    expect(result).toMatch(/\.flawra$/);
   });
 });

@@ -67,7 +67,7 @@ function makeAssistantMessage(
       id: id ?? `msg_${Math.random()}`,
       role: "assistant" as const,
       content,
-      model: model ?? "claude-sonnet-4-20250514",
+      model: model ?? "flawra-sonnet-4-20250514",
       usage: usage ?? {
         input_tokens: 100,
         output_tokens: 50,

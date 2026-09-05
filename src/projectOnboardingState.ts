@@ -17,23 +17,23 @@ export type Step = {
 }
 
 export function getSteps(): Step[] {
-  const hasClaudeMd = getFsImplementation().existsSync(
-    join(getCwd(), 'CLAUDE.md'),
+  const hasFlawraMd = getFsImplementation().existsSync(
+    join(getCwd(), 'FLAWRA.md'),
   )
   const isWorkspaceDirEmpty = isDirEmpty(getCwd())
 
   return [
     {
       key: 'workspace',
-      text: 'Ask Claude to create a new app or clone a repository',
+      text: 'Ask Flawra to create a new app or clone a repository',
       isComplete: false,
       isCompletable: true,
       isEnabled: isWorkspaceDirEmpty,
     },
     {
-      key: 'claudemd',
-      text: 'Run /init to create a CLAUDE.md file with instructions for Claude',
-      isComplete: hasClaudeMd,
+      key: 'flawramd',
+      text: 'Run /init to create a FLAWRA.md file with instructions for Flawra',
+      isComplete: hasFlawraMd,
       isCompletable: true,
       isEnabled: !isWorkspaceDirEmpty,
     },

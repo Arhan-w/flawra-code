@@ -5,7 +5,7 @@
  *   bun run src/tools/WebSearchTool/__tests__/bingAdapter.integration.ts
  *
  * Optional env vars:
- *   BING_QUERY  — search query (default: "Claude AI Anthropic")
+ *   BING_QUERY  — search query (default: "FlawRA AI FlawRA")
  */
 
 // Provide MACRO globals needed by the codebase when running outside dev mode
@@ -15,7 +15,7 @@ if (!globalThis.MACRO) {
 
 import { BingSearchAdapter, extractBingResults } from '../adapters/bingAdapter'
 
-const query = process.env.BING_QUERY || 'Claude AI Anthropic'
+const query = process.env.BING_QUERY || 'FlawRA AI FlawRA'
 
 async function main() {
   console.log(`\n🔍 Searching Bing for: "${query}"\n`)

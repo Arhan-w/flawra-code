@@ -61,8 +61,8 @@ function detectManifestType(
   if (fileName === 'plugin.json') return 'plugin'
   if (fileName === 'marketplace.json') return 'marketplace'
 
-  // Check if it's in .claude-plugin directory
-  if (dirName === '.claude-plugin') {
+  // Check if it's in .flawra-plugin directory
+  if (dirName === '.flawra-plugin') {
     return 'plugin' // Most likely plugin.json
   }
 
@@ -86,7 +86,7 @@ function formatZodErrors(zodError: z.ZodError): ValidationError[] {
  * For plugin.json component paths this is a security concern (escaping the plugin dir).
  * For marketplace.json source paths it's almost always a resolution-base misunderstanding:
  * paths resolve from the marketplace repo root, not from marketplace.json itself, so the
- * '..' a user added to "climb out of .claude-plugin/" is unnecessary. Callers pass `hint`
+ * '..' a user added to "climb out of .flawra-plugin/" is unnecessary. Callers pass `hint`
  * to attach the right explanation.
  */
 function checkPathTraversal(
@@ -106,19 +106,19 @@ function checkPathTraversal(
 }
 
 // Shown when a marketplace plugin source contains '..'. Most users hit this because
-// they expect paths to resolve relative to marketplace.json (inside .claude-plugin/),
+// they expect paths to resolve relative to marketplace.json (inside .flawra-plugin/),
 // but resolution actually starts at the marketplace repo root — see gh-29485.
 // Computes a tailored "use X instead of Y" suggestion from the user's actual path
 // rather than a hardcoded example (review feedback on #20895).
 function marketplaceSourceHint(p: string): string {
   // Strip leading ../ segments: the '..' a user added to "climb out of
-  // .claude-plugin/" is unnecessary since paths already start at the repo root.
+  // .flawra-plugin/" is unnecessary since paths already start at the repo root.
   // If '..' appears mid-path (rare), fall back to a generic example.
   const stripped = p.replace(/^(\.\.\/)+/, '')
   const corrected = stripped !== p ? `./${stripped}` : './plugins/my-plugin'
   return (
     'Plugin source paths are resolved relative to the marketplace root (the directory ' +
-    'containing .claude-plugin/), not relative to marketplace.json. ' +
+    'containing .flawra-plugin/), not relative to marketplace.json. ' +
     `Use "${corrected}" instead of "${p}".`
   )
 }
@@ -255,14 +255,14 @@ export async function validatePluginManifest(
     const manifest = result.data
 
     // Warn if name isn't strict kebab-case. CC's schema only rejects spaces,
-    // but the Claude.ai marketplace sync rejects non-kebab names. Surfacing
+    // but the Flawra.ai marketplace sync rejects non-kebab names. Surfacing
     // this here lets authors catch it in CI before the sync fails on them.
     if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(manifest.name)) {
       warnings.push({
         path: 'name',
         message:
           `Plugin name "${manifest.name}" is not kebab-case. FLAWRA-CODE accepts ` +
-          `it, but the Claude.ai marketplace sync requires kebab-case ` +
+          `it, but the Flawra.ai marketplace sync requires kebab-case ` +
           `(lowercase letters, digits, and hyphens only, e.g., "my-plugin").`,
       })
     }
@@ -447,7 +447,7 @@ export async function validateMarketplaceManifest(
       // Only local sources: remote sources would need cloning to check.
       const manifestDir = path.dirname(absolutePath)
       const marketplaceRoot =
-        path.basename(manifestDir) === '.claude-plugin'
+        path.basename(manifestDir) === '.flawra-plugin'
           ? path.dirname(manifestDir)
           : manifestDir
       for (const [i, entry] of marketplace.plugins.entries()) {
@@ -461,7 +461,7 @@ export async function validateMarketplaceManifest(
         const pluginJsonPath = path.join(
           marketplaceRoot,
           entry.source,
-          '.claude-plugin',
+          '.flawra-plugin',
           'plugin.json',
         )
         let manifestVersion: string | undefined
@@ -479,7 +479,7 @@ export async function validateMarketplaceManifest(
           warnings.push({
             path: `plugins[${i}].version`,
             message:
-              `Entry declares version "${entry.version}" but ${entry.source}/.claude-plugin/plugin.json says "${manifestVersion}". ` +
+              `Entry declares version "${entry.version}" but ${entry.source}/.flawra-plugin/plugin.json says "${manifestVersion}". ` +
               `At install time, plugin.json wins (calculatePluginVersion precedence) — the entry version is silently ignored. ` +
               `Update this entry to "${manifestVersion}" to match.`,
           })
@@ -580,7 +580,7 @@ function validateComponentFile(
     warnings.push({
       path: 'description',
       message:
-        `No description in frontmatter. A description helps users and Claude ` +
+        `No description in frontmatter. A description helps users and Flawra ` +
         `understand when to use this ${fileType}.`,
     })
   }
@@ -827,11 +827,11 @@ export async function validateManifest(
   }
 
   if (stats?.isDirectory()) {
-    // Look for manifest files in .claude-plugin directory
+    // Look for manifest files in .flawra-plugin directory
     // Prefer marketplace.json over plugin.json
     const marketplacePath = path.join(
       absolutePath,
-      '.claude-plugin',
+      '.flawra-plugin',
       'marketplace.json',
     )
     const marketplaceResult = await validateMarketplaceManifest(marketplacePath)
@@ -840,7 +840,7 @@ export async function validateManifest(
       return marketplaceResult
     }
 
-    const pluginPath = path.join(absolutePath, '.claude-plugin', 'plugin.json')
+    const pluginPath = path.join(absolutePath, '.flawra-plugin', 'plugin.json')
     const pluginResult = await validatePluginManifest(pluginPath)
     if (pluginResult.errors[0]?.code !== 'ENOENT') {
       return pluginResult
@@ -851,7 +851,7 @@ export async function validateManifest(
       errors: [
         {
           path: 'directory',
-          message: `No manifest found in directory. Expected .claude-plugin/marketplace.json or .claude-plugin/plugin.json`,
+          message: `No manifest found in directory. Expected .flawra-plugin/marketplace.json or .flawra-plugin/plugin.json`,
         },
       ],
       warnings: [],

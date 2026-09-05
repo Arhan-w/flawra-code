@@ -3,7 +3,7 @@ import { homedir } from 'os'
 import { join } from 'path'
 import { fileSuffixForOauthConfig } from '../constants/oauth.js'
 import { isRunningWithBun } from './bundledMode.js'
-import { getClaudeConfigHomeDir, isEnvTruthy } from './envUtils.js'
+import { getFlawraConfigHomeDir, isEnvTruthy } from './envUtils.js'
 import { findExecutable } from './findExecutable.js'
 import { getFsImplementation } from './fsOperations.js'
 import { which } from './which.js'
@@ -11,10 +11,10 @@ import { which } from './which.js'
 type Platform = 'win32' | 'darwin' | 'linux'
 
 // Config and data paths
-// FLAWRA-CODE: config lives in ~/.flawra — never reads Claude Code's
-// ~/.claude.json (that's where the /login managed key lives, which caused
+// FLAWRA-CODE: config lives in ~/.flawra — never reads Flawra Code's
+// ~/.flawra.json (that's where the /login managed key lives, which caused
 // the "Auth conflict" warning at startup). FLAWRA_CONFIG_DIR overrides.
-export const getGlobalClaudeFile = memoize((): string => {
+export const getGlobalFlawraFile = memoize((): string => {
   const dir =
     process.env.FLAWRA_CONFIG_DIR ||
     join(homedir(), '.flawra')
@@ -330,12 +330,12 @@ export const env = {
 
 /**
  * Returns the host platform for analytics reporting.
- * If CLAUDE_CODE_HOST_PLATFORM is set to a valid platform value, that overrides
+ * If FLAWRA_CODE_HOST_PLATFORM is set to a valid platform value, that overrides
  * the detected platform. This is useful for container/remote environments where
  * process.platform reports the container OS but the actual host platform differs.
  */
 export function getHostPlatformForAnalytics(): Platform {
-  const override = process.env.CLAUDE_CODE_HOST_PLATFORM
+  const override = process.env.FLAWRA_CODE_HOST_PLATFORM
   if (override === 'win32' || override === 'darwin' || override === 'linux') {
     return override
   }

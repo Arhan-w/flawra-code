@@ -1,5 +1,5 @@
 /**
- * Preconnect to the Anthropic API to overlap TCP+TLS handshake with startup.
+ * Preconnect to the FlawRA API to overlap TCP+TLS handshake with startup.
  *
  * The TCP+TLS handshake is ~100-200ms that normally blocks inside the first
  * API call. Kicking a fire-and-forget fetch during init lets the handshake
@@ -28,15 +28,15 @@ import { isEnvTruthy } from './envUtils.js'
 
 let fired = false
 
-export function preconnectAnthropicApi(): void {
+export function preconnectFlawRAApi(): void {
   if (fired) return
   fired = true
 
   // Skip if using a cloud provider — different endpoint + auth
   if (
-    isEnvTruthy(process.env.CLAUDE_CODE_USE_BEDROCK) ||
-    isEnvTruthy(process.env.CLAUDE_CODE_USE_VERTEX) ||
-    isEnvTruthy(process.env.CLAUDE_CODE_USE_FOUNDRY)
+    isEnvTruthy(process.env.FLAWRA_CODE_USE_BEDROCK) ||
+    isEnvTruthy(process.env.FLAWRA_CODE_USE_VERTEX) ||
+    isEnvTruthy(process.env.FLAWRA_CODE_USE_FOUNDRY)
   ) {
     return
   }
@@ -47,8 +47,8 @@ export function preconnectAnthropicApi(): void {
     process.env.HTTP_PROXY ||
     process.env.http_proxy ||
     process.env.ANTHROPIC_UNIX_SOCKET ||
-    process.env.CLAUDE_CODE_CLIENT_CERT ||
-    process.env.CLAUDE_CODE_CLIENT_KEY
+    process.env.FLAWRA_CODE_CLIENT_CERT ||
+    process.env.FLAWRA_CODE_CLIENT_KEY
   ) {
     return
   }

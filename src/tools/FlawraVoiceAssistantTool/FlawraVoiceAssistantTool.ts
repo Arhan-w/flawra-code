@@ -2,7 +2,7 @@
 // It uses OpenAI's Whisper (or any local whisper implementation) to capture
 // microphone audio, transcribe it, and feed the transcription to the
 // Flawra agent as a user command. This gives a hands‑free way to drive the
-// CLI and is not present in any other Claude‑derived forks.
+// CLI and is not present in any other Flawra‑derived forks.
 
 import { Tool, ToolResult } from '../../tool.js';
 import { execSync } from 'child_process';

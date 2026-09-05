@@ -138,7 +138,7 @@ function detectGateway({
   return undefined
 }
 
-function getAnthropicEnvMetadata() {
+function getFlawRAEnvMetadata() {
   return {
     ...(process.env.ANTHROPIC_BASE_URL
       ? {
@@ -228,7 +228,7 @@ export function logAPIQuery({
             previousRequestId as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS,
         }
       : {}),
-    ...getAnthropicEnvMetadata(),
+    ...getFlawRAEnvMetadata(),
   })
 }
 
@@ -361,7 +361,7 @@ export function logAPIError({
             previousRequestId as AnalyticsMetadata_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS,
         }
       : {}),
-    ...getAnthropicEnvMetadata(),
+    ...getFlawRAEnvMetadata(),
   })
 
   // Log API error event for OTLP
@@ -571,7 +571,7 @@ function logAPISuccess({
         }
       : {}),
     ...(isPostCompaction ? { isPostCompaction } : {}),
-    ...getAnthropicEnvMetadata(),
+    ...getFlawRAEnvMetadata(),
     timeSinceLastApiCallMs,
   })
 

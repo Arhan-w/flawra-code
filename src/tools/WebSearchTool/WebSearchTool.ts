@@ -68,7 +68,7 @@ export const WebSearchTool = buildTool({
   maxResultSizeChars: 100_000,
   shouldDefer: true,
   async description(input) {
-    return `Claude wants to search the web for: ${input.query}`
+    return `Flawra wants to search the web for: ${input.query}`
   },
   userFacingName() {
     return 'Web Search'

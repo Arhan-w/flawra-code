@@ -1,9 +1,9 @@
 /**
  * Search adapter factory — selects the appropriate backend by checking
- * whether the API base URL points to Anthropic's official endpoint.
+ * whether the API base URL points to FlawRA's official endpoint.
  */
 
-import { isFirstPartyAnthropicBaseUrl } from '../../../utils/model/providers.js'
+import { isFirstPartyFlawRABaseUrl } from '../../../utils/model/providers.js'
 import { ApiSearchAdapter } from './apiAdapter.js'
 import { BingSearchAdapter } from './bingAdapter.js'
 import type { WebSearchAdapter } from './types.js'
@@ -29,13 +29,13 @@ export function createAdapter(): WebSearchAdapter {
 //     return cachedAdapter
 //   }
 
-//   // Anthropic official URL → API server-side search
-//   if (isFirstPartyAnthropicBaseUrl()) {
+//   // FlawRA official URL → API server-side search
+//   if (isFirstPartyFlawRABaseUrl()) {
 //     cachedAdapter = new ApiSearchAdapter()
 //     return cachedAdapter
 //   }
 
-//   // Third-party proxies / non-Anthropic endpoints → Bing fallback
+//   // Third-party proxies / non-FlawRA endpoints → Bing fallback
 //   cachedAdapter = new BingSearchAdapter()
 //   return cachedAdapter
 }

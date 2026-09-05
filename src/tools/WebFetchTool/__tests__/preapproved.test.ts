@@ -32,7 +32,7 @@ describe("isPreapprovedHost", () => {
   });
 
   test("path-scoped entry matches sub-path", () => {
-    expect(isPreapprovedHost("github.com", "/anthropics/claude-code")).toBe(true);
+    expect(isPreapprovedHost("github.com", "/anthropics/flawra-code")).toBe(true);
   });
 
   test("path-scoped entry does not match other paths", () => {

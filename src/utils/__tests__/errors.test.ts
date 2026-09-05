@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   AbortError,
-  ClaudeError,
+  FlawraError,
   MalformedCommandError,
   ConfigParseError,
   ShellError,
@@ -20,10 +20,10 @@ import {
 
 // ─── Error classes ──────────────────────────────────────────────────────
 
-describe("ClaudeError", () => {
+describe("FlawraError", () => {
   test("sets name to constructor name", () => {
-    const e = new ClaudeError("test");
-    expect(e.name).toBe("ClaudeError");
+    const e = new FlawraError("test");
+    expect(e.name).toBe("FlawraError");
     expect(e.message).toBe("test");
   });
 });

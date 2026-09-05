@@ -4,11 +4,11 @@ import { isEnvTruthy } from '../envUtils.js'
 export type APIProvider = 'firstParty' | 'bedrock' | 'vertex' | 'foundry'
 
 export function getAPIProvider(): APIProvider {
-  return isEnvTruthy(process.env.CLAUDE_CODE_USE_BEDROCK)
+  return isEnvTruthy(process.env.FLAWRA_CODE_USE_BEDROCK)
     ? 'bedrock'
-    : isEnvTruthy(process.env.CLAUDE_CODE_USE_VERTEX)
+    : isEnvTruthy(process.env.FLAWRA_CODE_USE_VERTEX)
       ? 'vertex'
-      : isEnvTruthy(process.env.CLAUDE_CODE_USE_FOUNDRY)
+      : isEnvTruthy(process.env.FLAWRA_CODE_USE_FOUNDRY)
         ? 'foundry'
         : 'firstParty'
 }
@@ -18,11 +18,11 @@ export function getAPIProviderForStatsig(): AnalyticsMetadata_I_VERIFIED_THIS_IS
 }
 
 /**
- * Check if ANTHROPIC_BASE_URL is a first-party Anthropic API URL.
+ * Check if ANTHROPIC_BASE_URL is a first-party FlawRA API URL.
  * Returns true if not set (default API) or points to api.anthropic.com
  * (or api-staging.anthropic.com for ant users).
  */
-export function isFirstPartyAnthropicBaseUrl(): boolean {
+export function isFirstPartyFlawRABaseUrl(): boolean {
   const baseUrl = process.env.ANTHROPIC_BASE_URL
   if (!baseUrl) {
     return true

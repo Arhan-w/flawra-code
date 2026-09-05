@@ -4,7 +4,7 @@ import { Box, Text } from '../../ink.js';
 /**
  * FLAWRA-CODE mascot — the Prism.
  * A faceted diamond mark that "blinks" (eyes = the two inner facets).
- * Deliberately NOT the Claude blob: sharp geometry, cyan facets.
+ * Deliberately NOT the Flawra blob: sharp geometry, cyan facets.
  */
 export type ClawdPose = 'default' | 'arms-up' | 'look-left' | 'look-right';
 
@@ -25,9 +25,9 @@ export function Clawd({ pose = 'default' }: Props): React.ReactNode {
   const rows = POSES[pose] ?? POSES.default;
   return (
     <Box flexDirection="column">
-      <Text color="claude">{rows[0]}</Text>
-      <Text color="claude">{rows[1]}</Text>
-      <Text color="claude">{rows[2]}</Text>
+      <Text color="flawra">{rows[0]}</Text>
+      <Text color="flawra">{rows[1]}</Text>
+      <Text color="flawra">{rows[2]}</Text>
     </Box>
   );
 }
