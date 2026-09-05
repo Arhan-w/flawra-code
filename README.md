@@ -1,8 +1,13 @@
 # FLAWRA-CODE
 
+[![npm](https://img.shields.io/badge/version-2.1.900-blue?style=for-the-badge)](https://github.com/Arhan-w/flawra-code)
+[![bun](https://img.shields.io/badge/bun-%3E%3D%201.2-green?style=for-the-badge)](https://bun.sh)
+[![license](https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge)](./LICENSE)
+[![stars](https://img.shields.io/github/stars/Arhan-w/flawra-code?style=for-the-badge&logo=github)](https://github.com/Arhan-w/flawra-code)
+
 ![FLAWRA-CODE](assets/hero.png)
 
-**An agentic coding assistant that lives in your terminal.** Read a codebase, edit files, run commands, search the web, manage git, remember what matters — across sessions, on any model, through any endpoint.
+> **An agentic coding assistant that lives in your terminal.** Read a codebase, edit files, run commands, search the web, manage git, remember what matters — across sessions, on any model, through any endpoint.
 
 FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REPL with streaming tool execution, permission gating, sub-agents, skills, MCP support, and persistent memory — plus custom provider routing so you are never locked to one API. Runs an autonomous goal loop, a human-like computer-use driver, and a voice assistant so it can finish tasks end-to-end, click around your desktop, or take commands by voice.
 
@@ -82,7 +87,7 @@ Hard rules baked into the prompt: never type passwords, never click permission/2
 
 ## Custom providers & local models
 
-FLAWRA-CODE works with **any endpoint that speaks the Anthropic Messages format** — Ollama, LM Studio, llama.cpp server, LiteLLM, claude-code-router, GitHub Models, or hosted gateways. Configure once in `~/.flawra/providers.json`:
+FLAWRA-CODE works with **any endpoint that speaks the Anthropic Messages format** — Ollama, LM Studio, llama.cpp server, LiteLLM, GitHub Models, or hosted gateways. Configure once in `~/.flawra/providers.json`:
 
 ```json
 {
@@ -130,7 +135,7 @@ FLAWRA-CODE owns its own config home so it never collides with Claude Code's `~/
 | `~/.flawra/providers.json` | Custom provider config |
 | `~/.flawra/memory.db` | `flawra_memory` SQLite store |
 | `~/.flawra/recordings/` | asciicast recordings (when `FLAWRA_RECORD=1`) |
-| `%TEMP%/flawra-computer/` | `flawra_computer` screenshots |
+| `%TEMP%\flawra-computer\` | `flawra_computer` screenshots |
 
 ## Tools
 
