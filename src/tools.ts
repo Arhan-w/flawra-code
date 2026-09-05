@@ -15,6 +15,7 @@ import { FlawraMemoryTool } from './tools/FlawraMemoryTool/FlawraMemoryTool.js'
 import { FlawraCodeReviewTool } from './tools/FlawraCodeReviewTool/FlawraCodeReviewTool.js'
 import FlawraSchedulerTool from './tools/FlawraSchedulerTool/FlawraSchedulerTool.js'
 import FlawraVoiceAssistantTool from './tools/FlawraVoiceAssistantTool/FlawraVoiceAssistantTool.js'
+import FlawraDashboardTool from './tools/FlawraDashboardTool/FlawraDashboardTool.js'
 import { FlawraComputerTool } from './tools/FlawraComputerTool/FlawraComputerTool.js'
 // Dead code elimination: conditional import for ant-only tools
 /* eslint-disable custom-rules/no-process-env-top-level, @typescript-eslint/no-require-imports */
@@ -245,6 +246,7 @@ export function getAllBaseTools(): Tools {
     FlawraSchedulerTool,
     FlawraVoiceAssistantTool,
         ...(process.platform === 'win32' ? [FlawraComputerTool] : []),
+    FlawraDashboardTool,
     ...(SendUserFileTool ? [SendUserFileTool] : []),
     ...(PushNotificationTool ? [PushNotificationTool] : []),
     ...(SubscribePRTool ? [SubscribePRTool] : []),

@@ -1,7 +1,7 @@
 {
   "name": "flawra-code",
   "version": "1.0.0",
-  "description": "FLAWRA-CODE \u2014 interactive AI coding assistant in the terminal",
+  "description": "FLAWRA-CODE — interactive AI coding assistant in the terminal",
   "type": "module",
   "author": "Goated",
   "repository": {
@@ -48,7 +48,9 @@
     "start:ui": "concurrently \"bun run dev\" \"cd packages/@ant/claude-code-web && npm run dev\"",
     "docs:dev": "npx mintlify dev"
   },
-  "dependencies": {},
+  "dependencies": {
+    "express": "^5.2.1"
+  },
   "devDependencies": {
     "@alcalzone/ansi-tokenize": "^0.3.0",
     "@ant/flawra-for-chrome-mcp": "workspace:*",

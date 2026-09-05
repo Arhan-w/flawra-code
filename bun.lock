@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "flawra-code",
+      "dependencies": {
+        "express": "^5.2.1",
+      },
       "devDependencies": {
         "@alcalzone/ansi-tokenize": "^0.3.0",
         "@ant/computer-use-input": "workspace:*",
