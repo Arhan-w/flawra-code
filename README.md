@@ -1,141 +1,94 @@
+<div align="center">
+
 # FLAWRA-CODE
 
-[![npm](https://img.shields.io/badge/version-2.1.900-blue?style=for-the-badge)](https://github.com/Arhan-w/flawra-code)
-[![bun](https://img.shields.io/badge/bun-%3E%3D%201.2-green?style=for-the-badge)](https://bun.sh)
-[![license](https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge)](./LICENSE)
-[![stars](https://img.shields.io/github/stars/Arhan-w/flawra-code?style=for-the-badge&logo=github)](https://github.com/Arhan-w/flawra-code)
+### The terminal-first AI coding agent.
+
+[![version](https://img.shields.io/badge/version-2.1.900-22d3ee?style=for-the-badge)](./package.json)
+[![bun](https://img.shields.io/badge/bun-%E2%89%A51.2-fbf0df?style=for-the-badge&logo=bun&logoColor=black)](https://bun.sh)
+[![license](https://img.shields.io/badge/license-MIT-11151f?style=for-the-badge)](./LICENSE)
+[![stars](https://img.shields.io/github/stars/Arhan-w/flawra-code?style=for-the-badge&logo=github&color=22d3ee)](https://github.com/Arhan-w/flawra-code)
+[![build](https://img.shields.io/badge/build-passing-22c55e?style=for-the-badge)](https://github.com/Arhan-w/flawra-code/actions)
+[![tests](https://img.shields.io/badge/tests-2041%20%2F%202041-22c55e?style=for-the-badge)](https://github.com/Arhan-w/flawra-code)
+
+<br/>
 
 ![FLAWRA-CODE](assets/hero.png)
 
-> **An agentic coding assistant that lives in your terminal.** Read a codebase, edit files, run commands, search the web, manage git, remember what matters — across sessions, on any model, through any endpoint.
+<br/>
 
-FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REPL with streaming tool execution, permission gating, sub-agents, skills, MCP support, and persistent memory — plus custom provider routing so you are never locked to one API. Runs an autonomous goal loop, a human-like computer-use driver, a voice assistant, and a web dashboard so it can finish tasks end-to-end, click around your desktop, take commands by voice, and monitor usage.
+[**Demo (26s)**](assets/demo-v3.mp4) · [**Install**](#install) · [**Tools**](#tools) · [**Roadmap**](#roadmap) · [**Contribute**](./CONTRIBUTING.md)
 
-> 🆕 **v2.1.900 — fully rebranded.** The terminal UI, mascot, theme keys, dialog titles, and all `claude` strings have been renamed to `flawra` / `Flawra` / `FLAWRA` across 800+ files. No Claude Code DNA remains in the interface. The Prism mascot now renders with the `flawra` theme color.
+</div>
 
-![FLAWRA-CODE demo](assets/demo.gif)
+---
 
-## What it does
+## Why FLAWRA-CODE
 
-- **Works in your repo** — reads, edits, and creates files with surgical string replacement; runs shell commands with a permission system and sandbox awareness.
-- **Searches like a developer** — glob, ripgrep-backed search, web search, and URL fetching built in.
-- **Plans and executes** — plan mode, todo lists, background tasks, and sub-agent delegation for parallel workstreams.
-- **Runs unattended** — `flawra harness "<goal>"` drives a multi-turn verify loop until the goal is achieved and proven by the agent's own commands.
-- **Drives your desktop** — `flawra_computer` (Windows) takes screenshots, clicks, types, presses keys, scrolls, and lists windows. PowerShell + `user32.dll`, no native modules.
-- **Remembers you** — `flawra_memory` persists facts to a local SQLite store (`~/.flawra/memory.db`) and recalls them in future sessions.
-- **Reviews before you commit** — `flawra_code_review` scans files or your git working tree for hardcoded secrets, injection patterns, leftover debug code, and perf smells, with a severity-scored report.
-- **Speaks git** — `flawra_git` wraps status/diff/branch/commit/push/pull/log/stash in one tool call.
-- **Runs any model** — point it at Anthropic, Bedrock, Vertex, Foundry, or any local/self-hosted endpoint that speaks the Messages format.
-- **Its own look** — cyan Prism mascot, diamond-pulse spinner, FLAWRA terminal theme. Not a Claude reskin.
+A coding agent that respects your terminal, your machine, and your model choice.
+
+- **No vendor lock** — point it at Anthropic, Bedrock, Vertex, Foundry, Ollama, LM Studio, llama.cpp, LiteLLM, or any endpoint that speaks the Messages format. Switch with one env var.
+- **No cloud lock** — your code, your memory, your scheduled jobs all live in `~/.flawra/`. Nothing leaves your machine unless you send it to a model.
+- **No silent actions** — every read/edit/run goes through a permission layer you can lock down to `Bash(git diff:*)` patterns.
+- **No hands required** — `flawra harness "<goal>"` walks away and comes back with proof.
+- **Its own identity** — Prism mascot, diamond-pulse spinner, FLAWRA terminal theme. Binary, config, theme keys, mascot: all FLAWRA from the kernel up.
+
+---
 
 ## Demo
 
-Watch the full session: **[assets/demo.mp4](assets/demo.mp4)**
+<video src="assets/demo-v3.mp4" controls width="100%"></video>
 
-*Memory recall in action — the agent stores a fact to SQLite, then retrieves it on the next turn.*
+*24-second capture of an interactive session — typed prompt → spinner → generated code → memory recall. All running on the built binary, no mock.*
 
-![Memory recall](assets/memory-result.png)
+---
 
 ## Install
 
 Requires [Bun](https://bun.sh) ≥ 1.2.
 
 ```bash
+# 1. Install
 git clone https://github.com/Arhan-w/flawra-code.git
 cd flawra-code
 bun install
 bun run build
-bun link            # exposes the `flawra` command
-```
 
-Run it anywhere:
+# 2. Expose the `flawra` command
+bun link
 
-```bash
+# 3. Run it
 cd your-project
 flawra
 ```
 
-Non-interactive / pipe mode:
+Pipe mode for scripts and CI:
 
 ```bash
 echo "explain this error: $(some_command 2>&1)" | flawra -p
 ```
 
-## Harness — autonomous goal loop
+---
 
-Give it an end-state, walk away. The harness runs the agent in print mode, then re-feeds a verify-and-continue checkpoint each turn so the same session keeps going until it actually finishes the goal.
+## What it can do
 
-```bash
-flawra harness "ship the login page with tests" --max-turns 8
-flawra harness "fix every TS error in src/" --max-turns 6 --model sonnet
-```
+| | Capability | Notes |
+|---|---|---|
+| 🧠 | **Read & write** | Surgical string-replacement edits, line-ending and encoding preserved. |
+| 🐚 | **Shell** | Permission-gated `Bash` with sandbox detection and background tasks. |
+| 🔎 | **Search** | Glob + ripgrep + web search + URL fetch built in. |
+| 🪜 | **Plan & execute** | Plan mode, todo lists, background tasks, sub-agent delegation. |
+| 🤖 | **Run unattended** | `flawra harness "<goal>"` — autonomous multi-turn loop with `HARNESS:DONE` / `HARNESS:CONTINUE` protocol. |
+| 🖥️ | **Drive the desktop** | `flawra_computer` — screenshot, click, type, key, scroll (Windows, PowerShell + `user32.dll`, no native modules). |
+| 💾 | **Remember** | `flawra_memory` — persistent key/value store in SQLite, survives across sessions. |
+| 🛡️ | **Review before commit** | `flawra_code_review` — secrets, injection patterns, leftover debug, perf smells, severity scored. |
+| 🪝 | **Speak git** | `flawra_git` — one tool call for status/diff/branch/commit/push/pull/log/stash. |
+| 🗣️ | **Voice** | `flawra_voice_assistant` — record from mic (or read an audio file), transcribe with Whisper. |
+| ⏰ | **Schedule** | `flawra_scheduler` — cron and one-shot jobs in `~/.flawra/scheduler.json`. |
+| 🌐 | **Monitor** | `flawra_dashboard` — local web UI on `http://localhost:3030` for status, jobs, memory. |
+| 🔌 | **Extend** | MCP server over stdio JSON-RPC — IDEs, web apps, mobile clients can call every tool. |
 
-Protocol — the agent must end every turn with exactly one of these on its own final line:
-
-- `HARNESS:DONE` — only when the goal is fully achieved AND verified by a command the agent actually ran.
-- `HARNESS:CONTINUE <one-line next step>` — when work remains.
-
-It will not let the agent claim "done" without evidence. Exits 0 on `HARNESS:DONE`, 1 if the turn budget is exhausted.
-
-## Computer use (Windows)
-
-The `flawra_computer` tool drives the real desktop: screenshots, mouse clicks (left/right/double), typing, key combos, scroll, and window enumeration. Drive it like a human — one action, screenshot, decide, repeat.
-
-It is registered automatically on `process.platform === 'win32'`. PowerShell is the only host requirement; no native modules, no admin rights. Screenshots go to `%TEMP%\flawra-computer\screen-<ts>.png` so the agent can read the file back to see what happened.
-
-Hard rules baked into the prompt: never type passwords, never click permission/2FA/"Are you sure" prompts — stop and ask the user instead.
-
-## Custom providers & local models
-
-FLAWRA-CODE works with **any endpoint that speaks the Anthropic Messages format** — Ollama, LM Studio, llama.cpp server, LiteLLM, GitHub Models, or hosted gateways. Configure once in `~/.flawra/providers.json`:
-
-```json
-{
-  "active": "ollama",
-  "providers": {
-    "ollama": {
-      "label": "Ollama (local)",
-      "baseUrl": "http://localhost:11434",
-      "apiKey": "ollama",
-      "models": {
-        "sonnet": "qwen3-coder:30b",
-        "haiku": "llama3.2:3b",
-        "opus": "qwen3-coder:480b"
-      }
-    },
-    "gateway": {
-      "label": "LiteLLM proxy",
-      "baseUrl": "http://localhost:4000",
-      "apiKeyEnv": "LITELLM_MASTER_KEY",
-      "models": { "sonnet": "flawra-sonnet-4-5" }
-    }
-  }
-}
-```
-
-- `models` maps the built-in aliases (`sonnet`, `opus`, `haiku`, `best`) onto your provider's model IDs — `/model sonnet` then resolves to your local model.
-- `apiKeyEnv` reads the key from an environment variable instead of storing it in the file.
-- `headers` adds custom request headers (merged into `ANTHROPIC_CUSTOM_HEADERS`).
-- Switch providers per-run with `FLAWRA_PROVIDER=gateway flawra`.
-- Inspect your config with `flawra providers`.
-
-Environment variables still work for one-off use:
-
-```bash
-ANTHROPIC_BASE_URL=http://localhost:11434 ANTHROPIC_AUTH_TOKEN=*** flawra --model qwen3-coder:30b
-```
-
-## Config & data location
-
-FLAWRA-CODE owns its own config home so it never collides with any other tool's `~/.claude/` (OAuth tokens, `/login` managed key, etc.):
-
-| Path | What lives there |
-|---|---|
-| `~/.flawra/` | All FLAWRA-CODE state (override with `FLAWRA_CONFIG_DIR`) |
-| `~/.flawra/providers.json` | Custom provider config |
-| `~/.flawra/memory.db` | `flawra_memory` SQLite store |
-| `~/.flawra/recordings/` | asciicast recordings (when `FLAWRA_RECORD=1`) |
-| `%TEMP%\flawra-computer\` | `flawra_computer` screenshots |
+---
 
 ## Tools
 
@@ -150,94 +103,160 @@ FLAWRA-CODE owns its own config home so it never collides with any other tool's 
 | `Skill` | Load reusable procedures from disk |
 | `flawra_memory` | Persistent key/value memory (SQLite) across sessions |
 | `flawra_code_review` | Security/quality scan with severity scoring |
-| `flawra_git` | One-call git wrapper |
-| `flawra_computer` | Windows desktop driver: screenshot, click, type, key, scroll (Windows only) |
-| `flawra_voice_assistant` | Voice-controlled assistant: capture mic audio, transcribe with Whisper, feed as a user command |
-| `flawra_scheduler` | Schedule recurring (cron) or one-time tasks that run shell commands; jobs persist in `~/.flawra/scheduler.json` |
-| `flawra_dashboard` | Web dashboard: monitor status, tool usage, MCP server (http://localhost:3030) |
+| `flawra_git` | One-call git: status, diff, commit, push, branch, stash |
+| `flawra_computer` | Windows desktop driver: screenshot, click, type, key, scroll |
+| `flawra_voice_assistant` | Mic capture + Whisper transcription → user command |
+| `flawra_scheduler` | Cron/one-shot task scheduling, jobs in `~/.flawra/scheduler.json` |
+| `flawra_dashboard` | Local web dashboard on `http://localhost:3030` |
 | `MCP*` | Any Model Context Protocol server tool, dynamically discovered |
+
+---
+
+## Harness — autonomous goal loop
+
+Give it an end-state, walk away. The harness runs the agent in print mode and re-feeds a verify-and-continue checkpoint each turn so the same session keeps going until the goal is actually finished and proven.
+
+```bash
+flawra harness "ship the login page with tests" --max-turns 8
+flawra harness "fix every TS error in src/"    --max-turns 6 --model sonnet
+```
+
+The agent must end every turn with exactly one of these on its final line:
+
+- `HARNESS:DONE` — only when the goal is fully achieved **and** verified by a command the agent actually ran.
+- `HARNESS:CONTINUE <one-line next step>` — when work remains.
+
+It will not let the agent claim "done" without evidence. Exits 0 on `HARNESS:DONE`, 1 if the turn budget is exhausted.
+
+---
+
+## Computer use (Windows)
+
+`flawra_computer` drives the real desktop: screenshots, mouse clicks (left/right/double), typing, key combos, scroll, window enumeration. Drive it like a human — one action, screenshot, decide, repeat.
+
+- Registered automatically on `process.platform === 'win32'`.
+- PowerShell is the only host requirement — no native modules, no admin rights.
+- Screenshots go to `%TEMP%\flawra-computer\screen-<ts>.png` so the agent can read the file back to see what happened.
+- **Hard rules:** never type passwords, never click permission / 2FA / "Are you sure" prompts — stop and ask the user instead.
+
+---
+
+## Custom providers & local models
+
+Works with **any endpoint that speaks the Anthropic Messages format**. Configure once in `~/.flawra/providers.json`:
+
+```json
+{
+  "active": "ollama",
+  "providers": {
+    "ollama": {
+      "label": "Ollama (local)",
+      "baseUrl": "http://localhost:11434",
+      "apiKey": "ollama",
+      "models": {
+        "sonnet": "qwen3-coder:30b",
+        "haiku":  "llama3.2:3b",
+        "opus":   "qwen3-coder:480b"
+      }
+    },
+    "gateway": {
+      "label": "LiteLLM proxy",
+      "baseUrl": "http://localhost:4000",
+      "apiKeyEnv": "LITELLM_MASTER_KEY",
+      "models": { "sonnet": "flawra-sonnet-4-5" }
+    }
+  }
+}
+```
+
+- `models` maps built-in aliases (`sonnet`, `opus`, `haiku`, `best`) onto your provider's model IDs.
+- `apiKeyEnv` reads the key from an environment variable instead of storing it.
+- `headers` adds custom request headers (merged into `ANTHROPIC_CUSTOM_HEADERS`).
+- Switch per-run with `FLAWRA_PROVIDER=gateway flawra`.
+- Inspect config with `flawra providers`.
+
+One-off via env vars still works:
+
+```bash
+ANTHROPIC_BASE_URL=http://localhost:11434 ANTHROPIC_AUTH_TOKEN=*** flawra --model qwen3-coder:30b
+```
+
+---
+
+## Config & data location
+
+| Path | What lives there |
+|---|---|
+| `~/.flawra/` | All FLAWRA-CODE state (override with `FLAWRA_CONFIG_DIR`) |
+| `~/.flawra/providers.json` | Custom provider config |
+| `~/.flawra/memory.db` | `flawra_memory` SQLite store |
+| `~/.flawra/recordings/` | asciicast recordings (when `FLAWRA_RECORD=1`) |
+| `~/.flawra/scheduler.json` | Scheduled jobs |
+| `%TEMP%\flawra-computer\` | `flawra_computer` screenshots |
+
+---
 
 ## Permissions
 
-Nothing destructive happens silently. Every tool call goes through a permission layer: read-only operations run free, edits and commands prompt for approval, and rules in settings (`~/.flawra/settings.json`) let you pre-allow patterns like `Bash(git diff:*)`. Plan mode blocks all writes until you approve the plan.
+Nothing destructive happens silently. Every tool call goes through a permission layer:
+
+- Read-only operations run free.
+- Edits and commands prompt for approval.
+- Rules in `~/.flawra/settings.json` let you pre-allow patterns like `Bash(git diff:*)`.
+- Plan mode blocks all writes until you approve the plan.
+
+---
 
 ## Recording demos
 
-Built-in asciicast recorder — no external tools:
+Built-in asciicast recorder — no external tools needed:
 
 ```bash
 FLAWRA_RECORD=1 flawra        # records to ~/.flawra/recordings/*.cast
 agg demo.cast demo.gif        # render with https://github.com/asciinema/agg
 ```
 
+---
+
 ## Development
 
 ```bash
 bun run dev          # dev mode with MACRO defines
-bun test             # test suite
+bun test             # 2041 tests across 115 files
 bun run build        # production bundle → dist/
 bun run lint         # biome
+bun run start:ui     # dev server + web UI together
 ```
 
 Architecture: `src/entrypoints/cli.tsx` → `src/main.tsx` (commander) → `src/screens/REPL.tsx` (Ink UI) → `src/QueryEngine.ts` (turn loop, compaction, snapshots) → `src/query.ts` (API streaming + tool execution). Tools live in `src/tools/<Name>/`, each self-contained with schema, prompt, and UI renderer. The harness lives in `src/cli/harness.ts`; the desktop driver in `src/tools/FlawraComputerTool/`.
 
-## Credits
+---
 
-Built by **Arhan**. Architecture informed by open terminal-agent design; providers layer, harness loop, and computer-use driver added for full autonomy and model freedom.
-
-## License
-
-MIT
-
-## Contributing
-
-Thanks for considering a contribution! FLAWRA-CODE is built on Bun and uses Biome for lint/format.
-
-### Setup
-
-```bash
-git clone https://github.com/Arhan-w/flawra-code.git
-cd flawra-code
-bun install
-bun run build
-```
-
-### Workflow
-
-1. Fork the repo and create a branch from `master`.
-2. Make your changes. Follow the existing code style — `bun run format` and `bun run lint` before committing.
-3. Add or update tests under `src/__tests__/` for any new tool or behavior.
-4. Run `bun test` and `bun run build` locally to verify.
-5. Open a PR with a clear description of what changed and why.
-
-### Adding a new tool
-
-Tools live in `src/tools/<ToolName>/<ToolName>.ts`. Each tool needs:
-
-- A `ToolDef` with `name`, `description`, and `schema` (Zod-style).
-- An `async run(args)` method returning `{ success, output | error }`.
-- A default export via `buildTool(toolDef)`.
-- Registration in `src/tools.ts` (import + add to `getAllBaseTools()`).
-
-See `src/tools/FlawraMemoryTool/` as a template.
-
-### Roadmap
+## Roadmap
 
 | Feature | Status |
 |---|---|
-| `flawra_scheduler` — cron/one-shot task scheduling | ✅ Done |
-| `flawra_voice_assistant` — Whisper transcription + voice commands | ✅ Done |
-| `flawra_computer` — Windows desktop driver (click/type/screenshot) | ✅ Done |
-| `flawra_memory` — SQLite persistent memory | ✅ Done |
-| `flawra_code_review` — security/quality scan with severity scoring | ✅ Done |
-| `flawra_git` — one-call git wrapper | ✅ Done |
-| `flawra harness "<goal>"` — autonomous goal loop | ✅ Done |
-| Custom providers (`~/.flawra/providers.json`) | ✅ Done |
-| Full rebrand (claude → flawra, 800+ files) | ✅ Done |
-| Web UI integration (Claude Code UI via `ui-integration/`) | ✅ Done |
-| GitHub Actions CI | ✅ Done |
-| Test suite (`bun test`) | 🟡 Partial |
-| Plugin/MCP marketplace | 🔜 Planned |
-| Web dashboard for monitoring | ✅ Done |
-| Analytics and usage statistics | 🟡 Partial |
-| Mobile companion app | 🔜 Planned |
+| `flawra_scheduler` — cron/one-shot task scheduling | ✅ |
+| `flawra_voice_assistant` — Whisper transcription + voice commands | ✅ |
+| `flawra_computer` — Windows desktop driver | ✅ |
+| `flawra_memory` — SQLite persistent memory | ✅ |
+| `flawra_code_review` — security/quality scan with severity scoring | ✅ |
+| `flawra_git` — one-call git wrapper | ✅ |
+| `flawra harness "<goal>"` — autonomous goal loop | ✅ |
+| `flawra_dashboard` — local web dashboard | ✅ |
+| Custom providers (`~/.flawra/providers.json`) | ✅ |
+| MCP server over stdio JSON-RPC | ✅ |
+| GitHub Actions CI + auto-release | ✅ |
+| Test suite (`bun test`) — 2041/2041 | ✅ |
+| Community MCP marketplace registry | 🔜 |
+| Mobile companion app | 🔜 |
+
+---
+
+## Credits
+
+Built by **Arhan**.
+
+## License
+
+[MIT](./LICENSE)
