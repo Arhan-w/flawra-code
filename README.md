@@ -187,3 +187,54 @@ Built by **Arhan**. Architecture informed by open terminal-agent design; provide
 ## License
 
 MIT
+
+## Contributing
+
+Thanks for considering a contribution! FLAWRA-CODE is built on Bun and uses Biome for lint/format.
+
+### Setup
+
+```bash
+git clone https://github.com/Arhan-w/flawra-code.git
+cd flawra-code
+bun install
+bun run build
+```
+
+### Workflow
+
+1. Fork the repo and create a branch from `master`.
+2. Make your changes. Follow the existing code style — `bun run format` and `bun run lint` before committing.
+3. Add or update tests under `src/__tests__/` for any new tool or behavior.
+4. Run `bun test` and `bun run build` locally to verify.
+5. Open a PR with a clear description of what changed and why.
+
+### Adding a new tool
+
+Tools live in `src/tools/<ToolName>/<ToolName>.ts`. Each tool needs:
+
+- A `ToolDef` with `name`, `description`, and `schema` (Zod-style).
+- An `async run(args)` method returning `{ success, output | error }`.
+- A default export via `buildTool(toolDef)`.
+- Registration in `src/tools.ts` (import + add to `getAllBaseTools()`).
+
+See `src/tools/FlawraMemoryTool/` as a template.
+
+### Roadmap
+
+| Feature | Status |
+|---|---|
+| `flawra_scheduler` — cron/one-shot task scheduling | ✅ Done |
+| `flawra_voice_assistant` — Whisper transcription + voice commands | ✅ Done |
+| `flawra_computer` — Windows desktop driver (click/type/screenshot) | ✅ Done |
+| `flawra_memory` — SQLite persistent memory | ✅ Done |
+| `flawra_code_review` — security/quality scan with severity scoring | ✅ Done |
+| `flawra_git` — one-call git wrapper | ✅ Done |
+| `flawra harness "<goal>"` — autonomous goal loop | ✅ Done |
+| Custom providers (`~/.flawra/providers.json`) | ✅ Done |
+| Full rebrand (claude → flawra, 800+ files) | ✅ Done |
+| Web UI integration (Claude Code UI via `ui-integration/`) | ✅ Done |
+| GitHub Actions CI | ✅ Done |
+| Test suite (`bun test`) | 🟡 Partial |
+| Plugin/MCP marketplace | 🔜 Planned |
+| Mobile companion app | 🔜 Planned |
