@@ -17,6 +17,7 @@ FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REP
 - **Reviews before you commit** — `flawra_code_review` scans files or your git working tree for hardcoded secrets, injection patterns, leftover debug code, and perf smells, with a severity-scored report.
 - **Speaks git** — `flawra_git` wraps status/diff/branch/commit/push/pull/log/stash in one tool call.
 - **Runs any model** — point it at Anthropic, Bedrock, Vertex, Foundry, or any local/self-hosted endpoint that speaks the Messages format.
+- **Its own look** — cyan Prism mascot, diamond-pulse spinner, FLAWRA terminal theme. Not a Claude reskin.
 
 ## Demo
 

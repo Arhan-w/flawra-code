@@ -895,6 +895,17 @@ export const getMemoryFiles = memoize(
           )),
         )
 
+        // FLAWRA-CODE: FLAWRA.md is a first-class project context file,
+        // loaded alongside CLAUDE.md for compatibility.
+        result.push(
+          ...(await processMemoryFile(
+            join(dir, 'FLAWRA.md'),
+            'Project',
+            processedPaths,
+            includeExternal,
+          )),
+        )
+
         // Try reading .claude/CLAUDE.md (Project)
         const dotClaudePath = join(dir, '.claude', 'CLAUDE.md')
         result.push(
@@ -945,6 +956,15 @@ export const getMemoryFiles = memoize(
         result.push(
           ...(await processMemoryFile(
             projectPath,
+            'Project',
+            processedPaths,
+            includeExternal,
+          )),
+        )
+        // FLAWRA-CODE: FLAWRA.md from additional directories too
+        result.push(
+          ...(await processMemoryFile(
+            join(dir, 'FLAWRA.md'),
             'Project',
             processedPaths,
             includeExternal,
@@ -1259,6 +1279,15 @@ export async function getMemoryFilesForNestedDirectory(
     result.push(
       ...(await processMemoryFile(
         projectPath,
+        'Project',
+        processedPaths,
+        false,
+      )),
+    )
+    // FLAWRA-CODE: FLAWRA.md project context
+    result.push(
+      ...(await processMemoryFile(
+        join(dir, 'FLAWRA.md'),
         'Project',
         processedPaths,
         false,
