@@ -4,7 +4,9 @@
 
 **An agentic coding assistant that lives in your terminal.** Read a codebase, edit files, run commands, search the web, manage git, remember what matters — across sessions, on any model, through any endpoint.
 
-FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REPL with streaming tool execution, permission gating, sub-agents, skills, MCP support, and persistent memory — plus custom provider routing so you are never locked to one API. Runs an autonomous goal loop and a human-like computer-use driver so it can finish tasks end-to-end or click around your desktop for you.
+FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REPL with streaming tool execution, permission gating, sub-agents, skills, MCP support, and persistent memory — plus custom provider routing so you are never locked to one API. Runs an autonomous goal loop, a human-like computer-use driver, and a voice assistant so it can finish tasks end-to-end, click around your desktop, or take commands by voice.
+
+> 🆕 **v2.1.900 — fully rebranded.** The terminal UI, mascot, theme keys, dialog titles, and all `claude` strings have been renamed to `flawra` / `Flawra` / `FLAWRA` across 800+ files. No Claude Code DNA remains in the interface. The Prism mascot now renders with the `flawra` theme color.
 
 ![FLAWRA-CODE demo](assets/demo.gif)
 
@@ -144,12 +146,13 @@ FLAWRA-CODE owns its own config home so it never collides with Claude Code's `~/
 | `flawra_memory` | Persistent key/value memory (SQLite) across sessions |
 | `flawra_code_review` | Security/quality/perf scan with severity scoring |
 | `flawra_git` | One-call git: status, diff, commit, push, branch, stash |
-| `flawra_computer` | Windows desktop driver: screenshot, click, type, key, scroll (Windows only) |
+|| `flawra_computer` | Windows desktop driver: screenshot, click, type, key, scroll (Windows only) |
+|| `flawra_voice_assistant` | Voice-controlled assistant: capture mic audio, transcribe with Whisper, feed as a user command |
 | `MCP*` | Any Model Context Protocol server tool, dynamically discovered |
 
 ## Permissions
 
-Nothing destructive happens silently. Every tool call goes through a permission layer: read-only operations run free, edits and commands prompt for approval, and rules in settings (`~/.flaude/settings.json`) let you pre-allow patterns like `Bash(git diff:*)`. Plan mode blocks all writes until you approve the plan.
+Nothing destructive happens silently. Every tool call goes through a permission layer: read-only operations run free, edits and commands prompt for approval, and rules in settings (`~/.flawra/settings.json`) let you pre-allow patterns like `Bash(git diff:*)`. Plan mode blocks all writes until you approve the plan.
 
 ## Recording demos
 
