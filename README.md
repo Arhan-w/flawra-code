@@ -2,9 +2,9 @@
 
 ![FLAWRA-CODE](assets/hero.png)
 
-**An agentic coding assistant that lives in your terminal.** Read a codebase, edit files, run commands, search the web, manage git, and remember what matters — across sessions, on any model, through any endpoint.
+**An agentic coding assistant that lives in your terminal.** Read a codebase, edit files, run commands, search the web, manage git, remember what matters — across sessions, on any model, through any endpoint.
 
-FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REPL with streaming tool execution, permission gating, sub-agents, skills, MCP support, and persistent memory — plus custom provider routing so you are never locked to one API.
+FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REPL with streaming tool execution, permission gating, sub-agents, skills, MCP support, and persistent memory — plus custom provider routing so you are never locked to one API. Runs an autonomous goal loop and a human-like computer-use driver so it can finish tasks end-to-end or click around your desktop for you.
 
 ![FLAWRA-CODE demo](assets/demo.gif)
 
@@ -13,6 +13,8 @@ FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REP
 - **Works in your repo** — reads, edits, and creates files with surgical string replacement; runs shell commands with a permission system and sandbox awareness.
 - **Searches like a developer** — glob, ripgrep-backed search, web search, and URL fetching built in.
 - **Plans and executes** — plan mode, todo lists, background tasks, and sub-agent delegation for parallel workstreams.
+- **Runs unattended** — `flawra harness "<goal>"` drives a multi-turn verify loop until the goal is achieved and proven by the agent's own commands.
+- **Drives your desktop** — `flawra_computer` (Windows) takes screenshots, clicks, types, presses keys, scrolls, and lists windows. PowerShell + `user32.dll`, no native modules.
 - **Remembers you** — `flawra_memory` persists facts to a local SQLite store (`~/.flawra/memory.db`) and recalls them in future sessions.
 - **Reviews before you commit** — `flawra_code_review` scans files or your git working tree for hardcoded secrets, injection patterns, leftover debug code, and perf smells, with a severity-scored report.
 - **Speaks git** — `flawra_git` wraps status/diff/branch/commit/push/pull/log/stash in one tool call.
@@ -51,6 +53,30 @@ Non-interactive / pipe mode:
 ```bash
 echo "explain this error: $(some_command 2>&1)" | flawra -p
 ```
+
+## Harness — autonomous goal loop
+
+Give it an end-state, walk away. The harness runs the agent in print mode, then re-feeds a verify-and-continue checkpoint each turn so the same session keeps going until it actually finishes the goal.
+
+```bash
+flawra harness "ship the login page with tests" --max-turns 8
+flawra harness "fix every TS error in src/" --max-turns 6 --model sonnet
+```
+
+Protocol — the agent must end every turn with exactly one of these on its own final line:
+
+- `HARNESS:DONE` — only when the goal is fully achieved AND verified by a command the agent actually ran.
+- `HARNESS:CONTINUE <one-line next step>` — when work remains.
+
+It will not let the agent claim "done" without evidence. Exits 0 on `HARNESS:DONE`, 1 if the turn budget is exhausted.
+
+## Computer use (Windows)
+
+The `flawra_computer` tool drives the real desktop: screenshots, mouse clicks (left/right/double), typing, key combos, scroll, and window enumeration. Drive it like a human — one action, screenshot, decide, repeat.
+
+It is registered automatically on `process.platform === 'win32'`. PowerShell is the only host requirement; no native modules, no admin rights. Screenshots go to `%TEMP%\flawra-computer\screen-<ts>.png` so the agent can read the file back to see what happened.
+
+Hard rules baked into the prompt: never type passwords, never click permission/2FA/"Are you sure" prompts — stop and ask the user instead.
 
 ## Custom providers & local models
 
@@ -92,6 +118,18 @@ Environment variables still work for one-off use:
 ANTHROPIC_BASE_URL=http://localhost:11434 ANTHROPIC_AUTH_TOKEN=*** flawra --model qwen3-coder:30b
 ```
 
+## Config & data location
+
+FLAWRA-CODE owns its own config home so it never collides with Claude Code's `~/.claude/` (OAuth tokens, `/login` managed key, etc.):
+
+| Path | What lives there |
+|---|---|
+| `~/.flawra/` | All FLAWRA-CODE state (override with `FLAWRA_CONFIG_DIR`) |
+| `~/.flawra/providers.json` | Custom provider config |
+| `~/.flawra/memory.db` | `flawra_memory` SQLite store |
+| `~/.flawra/recordings/` | asciicast recordings (when `FLAWRA_RECORD=1`) |
+| `%TEMP%/flawra-computer/` | `flawra_computer` screenshots |
+
 ## Tools
 
 | Tool | What it does |
@@ -106,11 +144,12 @@ ANTHROPIC_BASE_URL=http://localhost:11434 ANTHROPIC_AUTH_TOKEN=*** flawra --mode
 | `flawra_memory` | Persistent key/value memory (SQLite) across sessions |
 | `flawra_code_review` | Security/quality/perf scan with severity scoring |
 | `flawra_git` | One-call git: status, diff, commit, push, branch, stash |
+| `flawra_computer` | Windows desktop driver: screenshot, click, type, key, scroll (Windows only) |
 | `MCP*` | Any Model Context Protocol server tool, dynamically discovered |
 
 ## Permissions
 
-Nothing destructive happens silently. Every tool call goes through a permission layer: read-only operations run free, edits and commands prompt for approval, and rules in settings (`~/.claude/settings.json`) let you pre-allow patterns like `Bash(git diff:*)`. Plan mode blocks all writes until you approve the plan.
+Nothing destructive happens silently. Every tool call goes through a permission layer: read-only operations run free, edits and commands prompt for approval, and rules in settings (`~/.flaude/settings.json`) let you pre-allow patterns like `Bash(git diff:*)`. Plan mode blocks all writes until you approve the plan.
 
 ## Recording demos
 
@@ -130,11 +169,11 @@ bun run build        # production bundle → dist/
 bun run lint         # biome
 ```
 
-Architecture: `src/entrypoints/cli.tsx` → `src/main.tsx` (commander) → `src/screens/REPL.tsx` (Ink UI) → `src/QueryEngine.ts` (turn loop, compaction, snapshots) → `src/query.ts` (API streaming + tool execution). Tools live in `src/tools/<Name>/`, each self-contained with schema, prompt, and UI renderer.
+Architecture: `src/entrypoints/cli.tsx` → `src/main.tsx` (commander) → `src/screens/REPL.tsx` (Ink UI) → `src/QueryEngine.ts` (turn loop, compaction, snapshots) → `src/query.ts` (API streaming + tool execution). Tools live in `src/tools/<Name>/`, each self-contained with schema, prompt, and UI renderer. The harness lives in `src/cli/harness.ts`; the desktop driver in `src/tools/FlawraComputerTool/`.
 
 ## Credits
 
-Built by **Arhan**. Architecture informed by open terminal-agent design; providers layer added for full model freedom.
+Built by **Arhan**. Architecture informed by open terminal-agent design; providers layer, harness loop, and computer-use driver added for full autonomy and model freedom.
 
 ## License
 
