@@ -26,7 +26,7 @@ echo "hi" | bun dist/cli.js -p   # pipe mode
 3. **`src/query.ts`** — core API loop: stream, tool calls, turn continuation.
 4. **`src/QueryEngine.ts`** — conversation orchestration: state, compaction, file snapshots, turn bookkeeping.
 5. **`src/screens/REPL.tsx`** — interactive Ink screen: input, rendering, permission prompts.
-6. **`src/services/api/claude.ts`** — request builder + provider selection (first-party / Bedrock / Vertex / Foundry / custom base URL).
+6. **`src/services/api/flawra.ts`** — request builder + provider selection (first-party / Bedrock / Vertex / Foundry / custom base URL).
 7. **`src/tools/<Name>/`** — one directory per tool: schema, prompt, call(), optional UI renderer. Registry in `src/tools.ts`.
 8. **`src/utils/model/customProviders.ts`** — FLAWRA provider layer: model alias mapping, env application, `flawra providers` listing.
 

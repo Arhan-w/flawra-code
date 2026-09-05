@@ -127,7 +127,7 @@ ANTHROPIC_BASE_URL=http://localhost:11434 ANTHROPIC_AUTH_TOKEN=*** flawra --mode
 
 ## Config & data location
 
-FLAWRA-CODE owns its own config home so it never collides with Claude Code's `~/.claude/` (OAuth tokens, `/login` managed key, etc.):
+FLAWRA-CODE owns its own config home so it never collides with any other tool's `~/.claude/` (OAuth tokens, `/login` managed key, etc.):
 
 | Path | What lives there |
 |---|---|
