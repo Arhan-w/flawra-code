@@ -146,8 +146,9 @@ FLAWRA-CODE owns its own config home so it never collides with Claude Code's `~/
 | `flawra_memory` | Persistent key/value memory (SQLite) across sessions |
 | `flawra_code_review` | Security/quality/perf scan with severity scoring |
 | `flawra_git` | One-call git: status, diff, commit, push, branch, stash |
-|| `flawra_computer` | Windows desktop driver: screenshot, click, type, key, scroll (Windows only) |
-|| `flawra_voice_assistant` | Voice-controlled assistant: capture mic audio, transcribe with Whisper, feed as a user command |
+| `flawra_computer` | Windows desktop driver: screenshot, click, type, key, scroll (Windows only) |
+| `flawra_voice_assistant` | Voice-controlled assistant: capture mic audio, transcribe with Whisper, feed as a user command |
+| `flawra_scheduler` | Schedule recurring (cron) or one-time tasks that run shell commands; jobs persist in `~/.flawra/scheduler.json` |
 | `MCP*` | Any Model Context Protocol server tool, dynamically discovered |
 
 ## Permissions
