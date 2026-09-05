@@ -9,7 +9,7 @@
 
 > **An agentic coding assistant that lives in your terminal.** Read a codebase, edit files, run commands, search the web, manage git, remember what matters — across sessions, on any model, through any endpoint.
 
-FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REPL with streaming tool execution, permission gating, sub-agents, skills, MCP support, and persistent memory — plus custom provider routing so you are never locked to one API. Runs an autonomous goal loop, a human-like computer-use driver, and a voice assistant so it can finish tasks end-to-end, click around your desktop, or take commands by voice.
+FLAWRA-CODE is a rebuilt, extended terminal coding agent: a full interactive REPL with streaming tool execution, permission gating, sub-agents, skills, MCP support, and persistent memory — plus custom provider routing so you are never locked to one API. Runs an autonomous goal loop, a human-like computer-use driver, a voice assistant, and a web dashboard so it can finish tasks end-to-end, click around your desktop, take commands by voice, and monitor usage.
 
 > 🆕 **v2.1.900 — fully rebranded.** The terminal UI, mascot, theme keys, dialog titles, and all `claude` strings have been renamed to `flawra` / `Flawra` / `FLAWRA` across 800+ files. No Claude Code DNA remains in the interface. The Prism mascot now renders with the `flawra` theme color.
 
@@ -107,7 +107,7 @@ FLAWRA-CODE works with **any endpoint that speaks the Anthropic Messages format*
       "label": "LiteLLM proxy",
       "baseUrl": "http://localhost:4000",
       "apiKeyEnv": "LITELLM_MASTER_KEY",
-      "models": { "sonnet": "claude-sonnet-4-5" }
+      "models": { "sonnet": "flawra-sonnet-4-5" }
     }
   }
 }
@@ -149,11 +149,12 @@ FLAWRA-CODE owns its own config home so it never collides with any other tool's 
 | `TodoWrite` / `Task*` | Structured task tracking across turns |
 | `Skill` | Load reusable procedures from disk |
 | `flawra_memory` | Persistent key/value memory (SQLite) across sessions |
-| `flawra_code_review` | Security/quality/perf scan with severity scoring |
-| `flawra_git` | One-call git: status, diff, commit, push, branch, stash |
+| `flawra_code_review` | Security/quality scan with severity scoring |
+| `flawra_git` | One-call git wrapper |
 | `flawra_computer` | Windows desktop driver: screenshot, click, type, key, scroll (Windows only) |
 | `flawra_voice_assistant` | Voice-controlled assistant: capture mic audio, transcribe with Whisper, feed as a user command |
 | `flawra_scheduler` | Schedule recurring (cron) or one-time tasks that run shell commands; jobs persist in `~/.flawra/scheduler.json` |
+| `flawra_dashboard` | Web dashboard: monitor status, tool usage, MCP server (http://localhost:3030) |
 | `MCP*` | Any Model Context Protocol server tool, dynamically discovered |
 
 ## Permissions
@@ -237,4 +238,6 @@ See `src/tools/FlawraMemoryTool/` as a template.
 | GitHub Actions CI | ✅ Done |
 | Test suite (`bun test`) | 🟡 Partial |
 | Plugin/MCP marketplace | 🔜 Planned |
+| Web dashboard for monitoring | ✅ Done |
+| Analytics and usage statistics | 🟡 Partial |
 | Mobile companion app | 🔜 Planned |
