@@ -11,18 +11,14 @@ import { which } from './which.js'
 type Platform = 'win32' | 'darwin' | 'linux'
 
 // Config and data paths
+// FLAWRA-CODE: config lives in ~/.flawra — never reads Claude Code's
+// ~/.claude.json (that's where the /login managed key lives, which caused
+// the "Auth conflict" warning at startup). FLAWRA_CONFIG_DIR overrides.
 export const getGlobalClaudeFile = memoize((): string => {
-  // Legacy fallback for backwards compatibility
-  if (
-    getFsImplementation().existsSync(
-      join(getClaudeConfigHomeDir(), '.config.json'),
-    )
-  ) {
-    return join(getClaudeConfigHomeDir(), '.config.json')
-  }
-
-  const filename = `.claude${fileSuffixForOauthConfig()}.json`
-  return join(process.env.CLAUDE_CONFIG_DIR || homedir(), filename)
+  const dir =
+    process.env.FLAWRA_CONFIG_DIR ||
+    join(homedir(), '.flawra')
+  return join(dir, 'flawra.json')
 })
 
 const hasInternetAccess = memoize(async (): Promise<boolean> => {

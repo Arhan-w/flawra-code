@@ -65,6 +65,22 @@ async function main(): Promise<void> {
     return;
   }
 
+  // Fast-path for `flawra harness "<goal>"` — autonomous verify-loop runner.
+  if (args[0] === 'harness') {
+    const { runHarness } = await import('../cli/harness.js');
+    const goal = args.slice(1).filter(a => !a.startsWith('--')).join(' ');
+    const maxIdx = args.indexOf('--max-turns');
+    const maxTurns = maxIdx !== -1 ? parseInt(args[maxIdx + 1] ?? '8', 10) : 8;
+    const modelIdx = args.indexOf('--model');
+    const model = modelIdx !== -1 ? args[modelIdx + 1] : undefined;
+    if (!goal) {
+      console.error('Usage: flawra harness "<goal>" [--max-turns 8] [--model <m>]');
+      process.exit(2);
+    }
+    const code = await runHarness({ goal, maxTurns, model });
+    process.exit(code);
+  }
+
   // For all other paths, load the startup profiler
   const { profileCheckpoint } = await import('../utils/startupProfiler.js');
   profileCheckpoint('cli_entry');

@@ -2,15 +2,19 @@ import memoize from 'lodash-es/memoize.js'
 import { homedir } from 'os'
 import { join } from 'path'
 
-// Memoized: 150+ callers, many on hot paths. Keyed off CLAUDE_CONFIG_DIR so
-// tests that change the env var get a fresh value without explicit cache.clear.
+// Memoized: 150+ callers, many on hot paths. FLAWRA-CODE keeps its own config
+// home (~/.flawra) so it never reads Claude Code's ~/.claude credentials,
+// /login managed keys, or OAuth tokens. FLAWRA_CONFIG_DIR wins, then
+// CLAUDE_CONFIG_DIR for compatibility.
 export const getClaudeConfigHomeDir = memoize(
   (): string => {
     return (
-      process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), '.claude')
+      process.env.FLAWRA_CONFIG_DIR ??
+      process.env.CLAUDE_CONFIG_DIR ??
+      join(homedir(), '.flawra')
     ).normalize('NFC')
   },
-  () => process.env.CLAUDE_CONFIG_DIR,
+  () => process.env.FLAWRA_CONFIG_DIR ?? process.env.CLAUDE_CONFIG_DIR,
 )
 
 export function getTeamsDir(): string {
