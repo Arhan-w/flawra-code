@@ -39,7 +39,7 @@ export function createWhatsNewFeed(releaseNotes: string[]): FeedConfig {
       text: note
     };
   });
-  const emptyMessage = (process.env.USER_TYPE) === 'ant' ? 'Unable to fetch latest claude-cli-internal commits' : 'Check the Claude Code changelog for updates';
+  const emptyMessage = (process.env.USER_TYPE) === 'ant' ? 'Unable to fetch latest claude-cli-internal commits' : 'Check the FLAWRA-CODE changelog for updates';
   return {
     title: (process.env.USER_TYPE) === 'ant' ? "What's new [ANT-ONLY: Latest CC commits]" : "What's new",
     lines,
@@ -73,7 +73,7 @@ export function createProjectOnboardingFeed(steps: Step[]): FeedConfig {
 }
 export function createGuestPassesFeed(): FeedConfig {
   const reward = getCachedReferrerReward();
-  const subtitle = reward ? `Share Claude Code and earn ${formatCreditAmount(reward)} of extra usage` : 'Share Claude Code with friends';
+  const subtitle = reward ? `Share FLAWRA-CODE and earn ${formatCreditAmount(reward)} of extra usage` : 'Share FLAWRA-CODE with friends';
   return {
     title: '3 guest passes',
     lines: [],

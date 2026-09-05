@@ -449,6 +449,14 @@ export function parseUserSpecifiedModel(
   const modelInputTrimmed = modelInput.trim()
   const normalizedModel = modelInputTrimmed.toLowerCase()
 
+  // FLAWRA-CODE: a custom provider's model map takes precedence, so aliases
+  // like 'sonnet' resolve to the provider's model ID (e.g. qwen3-coder:30b).
+  {
+    const { resolveCustomProviderModel } = require('./customProviders.js') as typeof import('./customProviders.js')
+    const custom = resolveCustomProviderModel(modelInputTrimmed)
+    if (custom) return custom
+  }
+
   const has1mTag = has1mContext(normalizedModel)
   const modelString = has1mTag
     ? normalizedModel.replace(/\[1m]$/i, '').trim()

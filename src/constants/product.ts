@@ -1,6 +1,6 @@
 export const PRODUCT_URL = 'https://flawra.ai'
 
-// Claude Code Remote session URLs
+// FLAWRA-CODE Remote session URLs
 export const FLAWRA_AI_BASE_URL = 'https://flawra.ai'
 export const CLAUDE_AI_STAGING_BASE_URL = 'https://claude-ai.staging.ant.dev'
 export const CLAUDE_AI_LOCAL_BASE_URL = 'http://localhost:4000'

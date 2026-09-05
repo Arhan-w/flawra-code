@@ -7,4 +7,5 @@ coverage
 .idea
 .vscode
 *.suo
-*.lock
+bun.lockb
+yarn.lock

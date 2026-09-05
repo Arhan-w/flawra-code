@@ -46,7 +46,22 @@ async function main(): Promise<void> {
   if (args.length === 1 && (args[0] === '--version' || args[0] === '-v' || args[0] === '-V')) {
     // MACRO.VERSION is inlined at build time
     // biome-ignore lint/suspicious/noConsole:: intentional console output
-    console.log(`${MACRO.VERSION} (Claude Code)`);
+    console.log(`${MACRO.VERSION} (FLAWRA-CODE)`);
+    return;
+  }
+
+  // FLAWRA-CODE: apply custom provider config (~/.flawra/providers.json) to
+  // process.env before anything reads ANTHROPIC_BASE_URL / auth tokens.
+  {
+    const { applyCustomProviderEnv } = await import('../utils/model/customProviders.js');
+    applyCustomProviderEnv();
+  }
+
+  // Fast-path for `flawra providers`: list configured providers and exit.
+  if (args[0] === 'providers') {
+    const { describeProviders } = await import('../utils/model/customProviders.js');
+    // biome-ignore lint/suspicious/noConsole:: intentional console output
+    console.log(describeProviders());
     return;
   }
 

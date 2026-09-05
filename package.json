@@ -1,20 +1,19 @@
 {
-  "name": "claude-code-best",
-  "version": "1.0.3",
-  "description": "Reverse-engineered Anthropic Claude Code CLI — interactive AI coding assistant in the terminal",
+  "name": "flawra-code",
+  "version": "1.0.0",
+  "description": "FLAWRA-CODE \u2014 interactive AI coding assistant in the terminal",
   "type": "module",
-  "author": "claude-code-best <claude-code-best@proton.me>",
+  "author": "Goated",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/claude-code-best/claude-code.git"
+    "url": "git+https://github.com/Arhan-w/flawra-code.git"
   },
-  "homepage": "https://github.com/claude-code-best/claude-code#readme",
+  "homepage": "https://github.com/Arhan-w/flawra-code#readme",
   "bugs": {
-    "url": "https://github.com/claude-code-best/claude-code/issues"
+    "url": "https://github.com/Arhan-w/flawra-code/issues"
   },
   "keywords": [
-    "claude",
-    "anthropic",
+    "flawra",
     "cli",
     "ai",
     "coding-assistant",
@@ -25,7 +24,7 @@
     "bun": ">=1.2.0"
   },
   "bin": {
-    "ccb": "dist/cli.js"
+    "flawra": "dist/cli.js"
   },
   "workspaces": [
     "packages/*",

@@ -17,23 +17,29 @@ const recordingState: { filePath: string | null; timestamp: number } = {
 
 /**
  * Get the asciicast recording file path.
- * For ants with CLAUDE_CODE_TERMINAL_RECORDING=1: returns a path.
- * Otherwise: returns null.
+ * FLAWRA-CODE: FLAWRA_RECORD=1 enables built-in terminal recording for demos
+ * (writes to ~/.flawra/recordings/). CLAUDE_CODE_TERMINAL_RECORDING=1 keeps
+ * the original ant-only path. Otherwise: returns null.
  * The path is computed once and cached in recordingState.
  */
 export function getRecordFilePath(): string | null {
   if (recordingState.filePath !== null) {
     return recordingState.filePath
   }
-  if (process.env.USER_TYPE !== 'ant') {
-    return null
-  }
-  if (!isEnvTruthy(process.env.CLAUDE_CODE_TERMINAL_RECORDING)) {
-    return null
+  const flawraRecord = isEnvTruthy(process.env.FLAWRA_RECORD)
+  if (!flawraRecord) {
+    if (process.env.USER_TYPE !== 'ant') {
+      return null
+    }
+    if (!isEnvTruthy(process.env.CLAUDE_CODE_TERMINAL_RECORDING)) {
+      return null
+    }
   }
   // Record alongside the transcript.
   // Each launch gets its own file so --continue produces multiple recordings.
-  const projectsDir = join(getClaudeConfigHomeDir(), 'projects')
+  const projectsDir = flawraRecord
+    ? join(process.env.FLAWRA_HOME || join(process.env.HOME || process.env.USERPROFILE || '.', '.flawra'), 'recordings')
+    : join(getClaudeConfigHomeDir(), 'projects')
   const projectDir = join(projectsDir, sanitizePath(getOriginalCwd()))
   recordingState.timestamp = Date.now()
   recordingState.filePath = join(

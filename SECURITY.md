@@ -1,21 +1,29 @@
 # Security Policy
 
-## Supported Versions
-
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+FLAWRA-CODE runs commands and edits files on your machine, behind a permission system. Treat that boundary seriously.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Open a **private security advisory** on the repository:
+https://github.com/Arhan-w/flawra-code/security/advisories/new
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Do not file public issues for vulnerabilities. We aim to acknowledge within 72 hours and ship a fix or guidance within 14 days for anything actionable.
+
+## In scope
+
+- Permission-system bypass (tool execution without approval)
+- Path traversal outside allowed working directories
+- Credential leakage (OAuth tokens, API keys) to unintended endpoints
+- Injection through settings, MCP responses, or project files
+
+## Out of scope
+
+- Prompt injection that only influences the model within already-granted permissions
+- Attacks requiring physical access to your machine or your config directory
+- `--dangerously-skip-permissions` behavior (documented as unsafe by design)
+
+## Good practices
+
+- Review permission prompts; don't run with bypass permissions outside disposable sandboxes
+- Keep `~/.flawra/providers.json` free of literal keys — use `apiKeyEnv`
+- Pin which MCP servers you trust; they execute third-party code

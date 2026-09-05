@@ -117,7 +117,7 @@ export function PreflightStep({ onSuccess }: PreflightStepProps) {
           <Box flexDirection="column" gap={1}>
             <Text>Please check your internet connection and network settings.</Text>
             <Text>
-              Note: Claude Code might not be available in your country. Check supported countries at{" "}
+              Note: FLAWRA-CODE might not be available in your country. Check supported countries at{" "}
               <Text color="suggestion">https://anthropic.com/supported-countries</Text>
             </Text>
           </Box>
