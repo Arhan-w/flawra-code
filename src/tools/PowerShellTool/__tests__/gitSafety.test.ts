@@ -1,7 +1,12 @@
-import { mock, describe, expect, test } from "bun:test";
+import { mock, describe, expect, test, afterAll } from "bun:test";
 
 // Mock dependencies before import
 const mockCwd = "/Users/test/project";
+
+// Capture the real parser before mocking so afterAll can restore it —
+// bun's mock.module persists process-wide and would otherwise break
+// later test files (powershellSecurity.test.ts) that need real exports.
+const realParser = await import("../../../utils/powershell/parser.js")
 
 mock.module("src/utils/cwd.js", () => ({
   getCwd: () => mockCwd,
@@ -131,4 +136,9 @@ describe("isDotGitPathPS", () => {
   test("handles quoted paths", () => {
     expect(isDotGitPathPS('".git/HEAD"')).toBe(true);
   });
+});
+
+// Restore the real parser so later test files see its full export surface.
+afterAll(() => {
+  mock.module("src/utils/powershell/parser.js", () => realParser)
 });

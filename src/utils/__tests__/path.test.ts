@@ -75,15 +75,16 @@ describe("expandPath", () => {
   });
 
   test("passes absolute paths through normalized", () => {
-    expect(expandPath("/usr/local/bin")).toBe("/usr/local/bin");
+    expect(expandPath("/usr/local/bin").replace(/\\/g, "/")).toBe("/usr/local/bin");
   });
 
   test("resolves relative path against baseDir", () => {
-    expect(expandPath("src", "/project")).toBe("/project/src");
+    // On Windows, "/project" resolves drive-relative (e.g. "D:\project\src").
+    expect(expandPath("src", "/project").replace(/\\/g, "/")).toMatch(/\/project\/src$/);
   });
 
   test("returns baseDir for empty string", () => {
-    expect(expandPath("", "/project")).toBe("/project");
+    expect(expandPath("", "/project").replace(/\\/g, "/")).toBe("/project");
   });
 
   test("returns cwd-based path for empty string without baseDir", () => {

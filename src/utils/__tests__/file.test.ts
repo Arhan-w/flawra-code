@@ -68,12 +68,13 @@ describe("stripLineNumberPrefix", () => {
 describe("normalizePathForComparison", () => {
   test("normalizes redundant separators", () => {
     const result = normalizePathForComparison("/a//b/c");
-    expect(result).toBe("/a/b/c");
+    // On Windows, path.normalize converts to backslashes; compare platform-agnostically.
+    expect(result.replace(/\\/g, "/")).toBe("/a/b/c");
   });
 
   test("resolves dot segments", () => {
     const result = normalizePathForComparison("/a/./b/../c");
-    expect(result).toBe("/a/c");
+    expect(result.replace(/\\/g, "/")).toBe("/a/c");
   });
 });
 

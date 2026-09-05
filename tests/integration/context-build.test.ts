@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { stripHtmlComments, isMemoryFilePath, getLargeMemoryFiles } from "../../src/utils/claudemd";
+import { stripHtmlComments, isMemoryFilePath, getLargeMemoryFiles } from "../../src/utils/flawramd";
 import { buildEffectiveSystemPrompt } from "../../src/utils/systemPrompt";
 import { createTempDir, cleanupTempDir, writeTempFile } from "../mocks/file-system";
 
@@ -75,10 +75,10 @@ describe("Context build: CLAUDE.md file system integration", () => {
     expect(content).toContain("Real text");
   });
 
-  test("isMemoryFilePath correctly identifies CLAUDE.md paths", () => {
-    expect(isMemoryFilePath("/project/CLAUDE.md")).toBe(true);
-    expect(isMemoryFilePath("/project/CLAUDE.local.md")).toBe(true);
-    expect(isMemoryFilePath("/project/.claude/rules/file.md")).toBe(true);
+  test("isMemoryFilePath correctly identifies FLAWRA.md paths", () => {
+    expect(isMemoryFilePath("/project/FLAWRA.md")).toBe(true);
+    expect(isMemoryFilePath("/project/FLAWRA.local.md")).toBe(true);
+    expect(isMemoryFilePath("/project/.flawra/rules/file.md")).toBe(true);
     expect(isMemoryFilePath("/project/README.md")).toBe(false);
     expect(isMemoryFilePath("/project/src/index.ts")).toBe(false);
   });

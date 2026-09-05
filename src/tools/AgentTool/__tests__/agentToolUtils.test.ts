@@ -1,4 +1,4 @@
-import { mock, describe, expect, test } from "bun:test";
+import { mock, describe, expect, test, afterAll } from "bun:test";
 
 // ─── Comprehensive mocks for agentToolUtils.ts dependencies ───
 // These must cover ALL named exports used by the module's transitive imports.
@@ -16,26 +16,6 @@ function stubModule(exportNames: string[]) {
 }
 
 mock.module("bun:bundle", () => ({ feature: () => false }));
-
-mock.module("zod/v4", () => ({
-  z: {
-    object: () => ({ extend: () => ({ parse: noop }) }),
-    strictObject: () => ({ extend: noop }),
-    string: () => ({ optional: () => ({ describe: noop }) }),
-    number: () => ({ optional: noop }),
-    boolean: () => ({ describe: noop }),
-    enum: () => ({ optional: noop }),
-    array: noop,
-    union: noop,
-    optional: noop,
-    preprocess: noop,
-    nullable: noop,
-    record: noop,
-    any: noop,
-    unknown: noop,
-    default: noop,
-  },
-}));
 
 mock.module("src/bootstrap/state.js", () => ({
   clearInvokedSkillsForAgent: noop,
@@ -312,3 +292,5 @@ describe("getLastToolUseName", () => {
     expect(getLastToolUseName(msg)).toBeUndefined();
   });
 });
+
+

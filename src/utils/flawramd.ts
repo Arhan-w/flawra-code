@@ -1469,10 +1469,10 @@ export function isMemoryFilePath(filePath: string): boolean {
     return true
   }
 
-  // .md files in .flawra/rules/ directories
+  // .md files in .flawra/rules/ directories (separator-agnostic)
   if (
     name.endsWith('.md') &&
-    filePath.includes(`${sep}.flawra${sep}rules${sep}`)
+    filePath.split(/[/\\]/).join('/').includes('/.flawra/rules/')
   ) {
     return true
   }
